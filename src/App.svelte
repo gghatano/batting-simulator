@@ -1,8 +1,10 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { playersStore, playersLoading, playersError, loadPlayers } from './stores/players';
+  import { activeTab } from './stores/ui';
   import LineupPanel from './components/LineupPanel.svelte';
   import PlayerList from './components/PlayerList.svelte';
+  import SimulationPanel from './components/SimulationPanel.svelte';
 
   onMount(() => {
     loadPlayers();
@@ -18,10 +20,32 @@
     <p class="error">Error: {$playersError}</p>
   {:else}
     <p>{$playersStore.length} players loaded.</p>
-    <div class="layout">
-      <PlayerList />
-      <LineupPanel />
-    </div>
+
+    <nav class="tabs">
+      <button
+        class="tab"
+        class:active={$activeTab === 'lineup'}
+        on:click={() => activeTab.set('lineup')}
+      >
+        打線作成
+      </button>
+      <button
+        class="tab"
+        class:active={$activeTab === 'simulation'}
+        on:click={() => activeTab.set('simulation')}
+      >
+        シミュレーション
+      </button>
+    </nav>
+
+    {#if $activeTab === 'lineup'}
+      <div class="layout">
+        <PlayerList />
+        <LineupPanel />
+      </div>
+    {:else}
+      <SimulationPanel />
+    {/if}
   {/if}
 </main>
 
@@ -43,5 +67,29 @@
 
   .layout > :global(:last-child) {
     flex-shrink: 0;
+  }
+
+  .tabs {
+    display: flex;
+    gap: 0;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid #ccc;
+  }
+
+  .tab {
+    padding: 0.5rem 1.5rem;
+    font-size: 1rem;
+    border: 2px solid #ccc;
+    border-bottom: none;
+    background: #f0f0f0;
+    cursor: pointer;
+    border-radius: 6px 6px 0 0;
+    margin-bottom: -2px;
+  }
+
+  .tab.active {
+    background: #fff;
+    border-bottom: 2px solid #fff;
+    font-weight: bold;
   }
 </style>
