@@ -73,6 +73,28 @@ h4 {
 }
 
 /* --------------------------------------------------
+ * Button Active Feedback
+ * Task 214: マイクロインタラクション
+ * -------------------------------------------------- */
+button:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+/* --------------------------------------------------
+ * Reduced Motion
+ * Task 214: prefers-reduced-motion 対応
+ * -------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* --------------------------------------------------
  * Images
  * -------------------------------------------------- */
 img {

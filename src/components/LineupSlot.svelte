@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte';
+  import { createEventDispatcher, afterUpdate } from 'svelte';
   import type { LineupSlot } from '../lib/models';
 
   /** 0-based slot index */
@@ -18,6 +18,18 @@
   $: isEmpty = slot === null;
   $: isFirst = index === 0;
   $: isLast = index === 8;
+
+  /** Track previous slot to detect when a player is newly set */
+  let prevSlot: LineupSlot = slot;
+  let pulsing = false;
+
+  afterUpdate(() => {
+    if (slot !== null && prevSlot === null) {
+      pulsing = true;
+      setTimeout(() => { pulsing = false; }, 300);
+    }
+    prevSlot = slot;
+  });
 </script>
 
 <div class="lineup-slot-row">
@@ -25,6 +37,7 @@
     class="lineup-slot"
     class:selected
     class:empty-slot={isEmpty}
+    class:pulse={pulsing}
     on:click
     type="button"
     aria-pressed={selected}
@@ -191,5 +204,25 @@
 
   .move-btn {
     color: var(--color-neutral-700);
+  }
+
+  /* Pulse animation when a player is set */
+  .lineup-slot.pulse {
+    animation: slot-pulse 0.3s ease;
+  }
+
+  @keyframes slot-pulse {
+    0% {
+      background-color: var(--color-primary-300);
+    }
+    100% {
+      background-color: var(--color-bg-surface);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .lineup-slot.pulse {
+      animation: none;
+    }
   }
 </style>
