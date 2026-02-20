@@ -1,11 +1,25 @@
 <script lang="ts">
   import { lineupStore } from '../stores/lineup';
   import { activeTab } from '../stores/ui';
+  import type { Player } from '../lib/models';
 
   $: lineup = $lineupStore;
 
   function goToLineup(): void {
     activeTab.set('lineup');
+  }
+
+  /** Format rate as .XXX (3 decimal places, no leading zero) */
+  function fmtRate(v: number): string {
+    return v.toFixed(3).replace(/^0/, '');
+  }
+
+  function avg(p: Player): number {
+    return p.pa > 0 ? (p.single + p.double + p.triple + p.hr) / p.pa : 0;
+  }
+
+  function hrRate(p: Player): number {
+    return p.pa > 0 ? p.hr / p.pa : 0;
   }
 </script>
 
@@ -17,8 +31,9 @@
       <li class:empty={slot === null}>
         <span class="order">{i + 1}.</span>
         {#if slot}
+          <span class="position-badge">{slot.position}</span>
           <span class="player-name">{slot.name}</span>
-          <span class="player-team">{slot.team}</span>
+          <span class="player-stats">{fmtRate(avg(slot))} / HR{fmtRate(hrRate(slot))}</span>
         {:else}
           <span class="empty-label">---</span>
         {/if}
@@ -35,8 +50,8 @@
   .lineup-summary {
     position: sticky;
     top: var(--space-lg);
-    min-width: 200px;
-    max-width: 260px;
+    width: 320px;
+    flex-shrink: 0;
     padding: var(--space-lg);
     border: 1px solid var(--color-border-light);
     border-radius: var(--radius-lg);
@@ -88,10 +103,27 @@
     color: var(--color-text);
   }
 
-  .player-team {
+  .position-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.4rem;
+    height: 1.4rem;
+    border-radius: var(--radius-sm);
+    background: var(--color-neutral-200);
+    color: var(--color-text);
+    font-size: var(--font-xs);
+    font-weight: 700;
+    flex-shrink: 0;
+    line-height: 1;
+  }
+
+  .player-stats {
     color: var(--color-text-muted);
-    font-size: var(--font-sm);
+    font-size: var(--font-xs);
+    margin-left: auto;
     white-space: nowrap;
+    font-variant-numeric: tabular-nums;
   }
 
   .empty-label {
@@ -119,8 +151,6 @@
 
   @media (max-width: 768px) {
     .lineup-summary {
-      min-width: 0;
-      max-width: 100%;
       width: 100%;
       position: static;
     }

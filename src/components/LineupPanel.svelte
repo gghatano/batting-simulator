@@ -105,7 +105,8 @@
     display: flex;
     flex-direction: column;
     gap: var(--space-sm);
-    min-width: 220px;
+    width: 320px;
+    flex-shrink: 0;
   }
 
   h2 {
@@ -217,7 +218,6 @@
 
   @media (max-width: 768px) {
     .lineup-panel {
-      min-width: 0;
       width: 100%;
     }
   }

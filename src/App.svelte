@@ -179,6 +179,7 @@
   }
 
   .layout > :global(:last-child) {
+    width: 320px;
     flex-shrink: 0;
   }
 
@@ -194,6 +195,7 @@
   }
 
   .sim-layout > :global(:last-child) {
+    width: 320px;
     flex-shrink: 0;
   }
 

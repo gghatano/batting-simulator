@@ -19,6 +19,21 @@
   $: isFirst = index === 0;
   $: isLast = index === 8;
 
+  /** Batting average = (single + double + triple + hr) / pa */
+  $: avg = slot && slot.pa > 0
+    ? ((slot.single + slot.double + slot.triple + slot.hr) / slot.pa)
+    : 0;
+
+  /** HR rate = hr / pa */
+  $: hrRate = slot && slot.pa > 0
+    ? (slot.hr / slot.pa)
+    : 0;
+
+  /** Format rate as .XXX (3 decimal places, no leading zero) */
+  function fmtRate(v: number): string {
+    return v.toFixed(3).replace(/^0/, '');
+  }
+
   /** Track previous slot to detect when a player is newly set */
   let prevSlot: LineupSlot = slot;
   let pulsing = false;
@@ -46,8 +61,9 @@
     {#if selected}<span class="selected-indicator" aria-hidden="true">▶</span>{/if}
     <span class="order">{index + 1}</span>
     {#if slot}
+      <span class="position-badge">{slot.position}</span>
       <span class="player-name">{slot.name}</span>
-      <span class="player-team">{slot.team}</span>
+      <span class="player-stats">{fmtRate(avg)} / HR{fmtRate(hrRate)}</span>
     {:else}
       <span class="placeholder">未設定</span>
     {/if}
@@ -158,10 +174,27 @@
     color: var(--color-text);
   }
 
-  .player-team {
+  .position-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.6rem;
+    height: 1.6rem;
+    border-radius: var(--radius-sm);
+    background: var(--color-neutral-200);
+    color: var(--color-text);
+    font-size: var(--font-xs);
+    font-weight: 700;
+    flex-shrink: 0;
+    line-height: 1;
+  }
+
+  .player-stats {
     color: var(--color-text-muted);
-    font-size: var(--font-sm);
+    font-size: var(--font-xs);
     margin-left: auto;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
   }
 
   .placeholder {
