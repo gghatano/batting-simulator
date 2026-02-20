@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { fade, scale } from 'svelte/transition';
   import type { Player } from '../lib/models';
   import { calcBatterRates } from '../lib/rates';
 
@@ -33,8 +34,16 @@
 <svelte:window on:keydown={handleKeydown} />
 
 <!-- svelte-ignore a11y-click-events-have-key-events a11y-interactive-supports-focus -->
-<div class="modal-backdrop" on:click={handleBackdropClick} role="dialog" aria-modal="true" tabindex="-1" aria-label="{player.name} の詳細">
-  <div class="modal-content">
+<div
+  class="modal-backdrop"
+  on:click={handleBackdropClick}
+  role="dialog"
+  aria-modal="true"
+  tabindex="-1"
+  aria-label="{player.name} の詳細"
+  transition:fade={{ duration: 200 }}
+>
+  <div class="modal-content" transition:scale={{ duration: 200, start: 0.95 }}>
     <div class="modal-header">
       <h2 class="modal-title">{player.name}</h2>
       <button class="close-btn" type="button" on:click={onClose} aria-label="閉じる">&times;</button>
@@ -52,7 +61,7 @@
 
       {#if rates}
         <h3 class="section-title">安打率</h3>
-        <table class="table table-compact rates-table">
+        <table class="table table-zebra rates-table">
           <thead>
             <tr>
               <th>項目</th>
@@ -85,7 +94,7 @@
         </table>
 
         <h3 class="section-title">その他</h3>
-        <table class="table table-compact rates-table">
+        <table class="table table-zebra rates-table">
           <thead>
             <tr>
               <th>項目</th>
@@ -145,12 +154,15 @@
     justify-content: space-between;
     padding: var(--space-md) var(--space-lg);
     border-bottom: 1px solid var(--color-border-light);
+    border-left: 4px solid var(--color-primary-500);
+    background: var(--color-primary-50);
   }
 
   .modal-title {
     margin: 0;
     font-size: 1.1rem;
     font-weight: 700;
+    color: var(--color-primary-700);
   }
 
   .close-btn {
@@ -160,7 +172,7 @@
     line-height: 1;
     cursor: pointer;
     color: var(--color-text-muted);
-    padding: 0 0.25rem;
+    padding: 0 var(--space-xs);
   }
 
   .close-btn:hover {
@@ -168,14 +180,14 @@
   }
 
   .modal-body {
-    padding: 0.75rem 1rem 1rem;
+    padding: var(--space-md) var(--space-lg) var(--space-lg);
   }
 
   .info-row {
     display: flex;
     justify-content: space-between;
-    padding: 0.25rem 0;
-    font-size: 0.85rem;
+    padding: var(--space-xs) 0;
+    font-size: var(--font-sm);
   }
 
   .info-label {
@@ -188,22 +200,27 @@
   }
 
   .section-title {
-    margin: 0.75rem 0 0.3rem;
+    margin: var(--space-md) 0 var(--space-xs);
     font-size: var(--font-sm);
     font-weight: 700;
-    color: var(--color-neutral-700);
+    color: var(--color-primary-600);
     border-bottom: 1px solid var(--color-border-light);
-    padding-bottom: 0.2rem;
+    padding-bottom: var(--space-xs);
   }
 
   .rates-table th {
     text-align: left;
+    padding: var(--space-sm) var(--space-md);
     color: var(--color-text-secondary);
   }
 
   .rates-table th:nth-child(2),
   .rates-table th:nth-child(3) {
     text-align: right;
+  }
+
+  .rates-table td {
+    padding: var(--space-sm) var(--space-md);
   }
 
   .no-data {
