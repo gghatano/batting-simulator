@@ -1,10 +1,16 @@
 <script lang="ts">
   import { setPlayers, loadPlayers } from '../stores/players';
   import { parseCSV } from '../lib/csvParser';
+  import { loadFromSpreadsheet } from '../lib/spreadsheetLoader';
 
   let fileInput: HTMLInputElement;
   let warnings: string[] = [];
   let importedCount: number | null = null;
+
+  // Spreadsheet URL input state
+  let spreadsheetUrl: string = '';
+  let isLoading: boolean = false;
+  let showFormatHelp: boolean = false;
 
   function handleClick(): void {
     fileInput.click();
@@ -37,17 +43,47 @@
     input.value = '';
   }
 
+  async function handleLoadFromUrl(): Promise<void> {
+    if (!spreadsheetUrl.trim() || isLoading) return;
+
+    isLoading = true;
+    warnings = [];
+    importedCount = null;
+
+    try {
+      const result = await loadFromSpreadsheet(spreadsheetUrl);
+
+      warnings = result.warnings;
+
+      if (result.players.length === 0 && result.warnings.length > 0) {
+        return;
+      }
+
+      setPlayers(result.players);
+      importedCount = result.players.length;
+    } catch (err) {
+      warnings = [err instanceof Error ? err.message : String(err)];
+    } finally {
+      isLoading = false;
+    }
+  }
+
   function handleReset(): void {
     warnings = [];
     importedCount = null;
+    spreadsheetUrl = '';
     loadPlayers();
+  }
+
+  function toggleFormatHelp(): void {
+    showFormatHelp = !showFormatHelp;
   }
 </script>
 
 <div class="data-import">
   <div class="data-import-buttons">
     <button class="btn btn-import" on:click={handleClick}>
-      データ読み込み
+      CSVファイル読み込み
     </button>
     <button class="btn btn-reset" on:click={handleReset}>
       デフォルトに戻す
@@ -59,6 +95,43 @@
       class="hidden-input"
       on:change={handleFileChange}
     />
+  </div>
+
+  <div class="url-import-section">
+    <div class="url-input-row">
+      <input
+        type="text"
+        class="url-input"
+        placeholder="Google Spreadsheet の公開URL"
+        bind:value={spreadsheetUrl}
+        disabled={isLoading}
+        on:keydown={(e) => { if (e.key === 'Enter') handleLoadFromUrl(); }}
+      />
+      <button
+        class="btn btn-import"
+        on:click={handleLoadFromUrl}
+        disabled={isLoading || !spreadsheetUrl.trim()}
+      >
+        {#if isLoading}
+          <span class="spinner spinner-sm"></span>
+          読み込み中...
+        {:else}
+          URLから読み込み
+        {/if}
+      </button>
+    </div>
+    <button class="format-help-toggle" on:click={toggleFormatHelp}>
+      {showFormatHelp ? '▼' : '▶'} フォーマット説明
+    </button>
+    {#if showFormatHelp}
+      <div class="format-help">
+        <p class="format-help-desc">
+          スプレッドシートを「ウェブに公開」するか、「リンクを知っている全員がアクセス可能」に設定してください。
+        </p>
+        <p class="format-help-desc">CSVヘッダー（1行目）に以下の列が必要です:</p>
+        <code class="format-help-columns">id, name, team, position, pa, single, double, triple, hr, bb, hbp, so</code>
+      </div>
+    {/if}
   </div>
 
   {#if importedCount !== null}
@@ -109,9 +182,14 @@
     border-color: var(--color-primary-500);
   }
 
-  .btn-import:hover {
+  .btn-import:hover:not(:disabled) {
     background: var(--color-primary-400);
     border-color: var(--color-primary-400);
+  }
+
+  .btn-import:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
   }
 
   .btn-reset {
@@ -121,6 +199,97 @@
 
   .btn-reset:hover {
     background: var(--color-neutral-100);
+  }
+
+  /* URL import section */
+  .url-import-section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+  }
+
+  .url-input-row {
+    display: flex;
+    gap: var(--space-sm);
+    align-items: center;
+  }
+
+  .url-input {
+    flex: 1;
+    padding: var(--space-xs) var(--space-sm);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-sm);
+    color: var(--color-text);
+    background: var(--color-bg-surface);
+  }
+
+  .url-input:focus {
+    outline: none;
+    border-color: var(--color-primary-400);
+    box-shadow: 0 0 0 2px var(--color-primary-50);
+  }
+
+  .url-input:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  /* Format help */
+  .format-help-toggle {
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: var(--font-sm);
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    text-align: left;
+  }
+
+  .format-help-toggle:hover {
+    color: var(--color-text);
+  }
+
+  .format-help {
+    background: var(--color-bg-muted);
+    border-radius: var(--radius-sm);
+    padding: var(--space-sm) var(--space-md);
+    font-size: var(--font-sm);
+  }
+
+  .format-help-desc {
+    margin: 0 0 var(--space-xs) 0;
+    color: var(--color-text-secondary);
+  }
+
+  .format-help-columns {
+    display: block;
+    background: var(--color-bg-surface);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-sm);
+    padding: var(--space-xs) var(--space-sm);
+    font-size: var(--font-xs);
+    color: var(--color-text);
+    word-break: break-all;
+  }
+
+  /* Spinner inline (from components.css keyframes) */
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .spinner {
+    display: inline-block;
+    width: 0.75rem;
+    height: 0.75rem;
+    border: 1.5px solid rgba(255, 255, 255, 0.4);
+    border-top-color: #ffffff;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+    vertical-align: middle;
+    margin-right: var(--space-xs);
   }
 
   .import-success {
