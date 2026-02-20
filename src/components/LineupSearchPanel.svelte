@@ -113,6 +113,7 @@
   <div class="action-row">
     <button disabled={!canSearch} on:click={startSearch}>
       {#if searching}
+        <span class="spinner spinner-sm"></span>
         探索中...
       {:else}
         探索開始
@@ -122,8 +123,11 @@
 
   {#if searching}
     <div class="loading">
-      <span class="spinner"></span>
-      <span>探索中... ({numCandidates}候補を評価中)</span>
+      <div class="progress-bar-indeterminate"></div>
+      <div class="loading-text">
+        <span class="spinner"></span>
+        <span>探索中... ({numCandidates}候補を評価中)</span>
+      </div>
     </div>
   {/if}
 
@@ -219,6 +223,9 @@
   }
 
   .action-row button {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
     padding: var(--space-sm) var(--space-lg);
     font-size: var(--font-base);
     cursor: pointer;
@@ -240,12 +247,15 @@
   }
 
   .loading {
-    display: flex;
-    align-items: center;
-    gap: var(--space-sm);
     padding: var(--space-sm) 0;
     color: var(--color-text-secondary);
     font-size: var(--font-base);
+  }
+
+  .loading-text {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
   }
 
   .results {
