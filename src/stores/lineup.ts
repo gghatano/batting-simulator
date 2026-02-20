@@ -2,7 +2,7 @@
 // lineup.ts — Svelte stores for the 9-batter lineup
 // ---------------------------------------------------------------------------
 
-import { writable } from "svelte/store";
+import { writable, get } from "svelte/store";
 import type { Player, Lineup } from "../lib/models";
 
 // --- Lineup store (9 slots, initially all null) ---
@@ -59,4 +59,29 @@ export function swapSlots(i: number, j: number): void {
     next[j] = tmp;
     return next;
   });
+}
+
+/**
+ * Add a player to the currently selected slot, then advance selectedSlotStore
+ * to the next empty slot (wrapping around). If all slots are filled, advance
+ * to (current + 1) % 9.
+ */
+export function addPlayerToSelectedSlot(player: Player): void {
+  const currentSlot = get(selectedSlotStore);
+  setSlot(currentSlot, player);
+
+  // Read the lineup *after* setting the slot
+  const lineup = get(lineupStore);
+
+  // Find the next empty slot, starting from currentSlot + 1 and wrapping
+  for (let offset = 1; offset <= 9; offset++) {
+    const candidate = (currentSlot + offset) % 9;
+    if (lineup[candidate] === null) {
+      selectedSlotStore.set(candidate);
+      return;
+    }
+  }
+
+  // All slots filled — move to next slot cyclically
+  selectedSlotStore.set((currentSlot + 1) % 9);
 }
