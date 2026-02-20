@@ -71,6 +71,9 @@
         pct: totalTrials > 0 ? (count / totalTrials) * 100 : 0,
       }))
     : [];
+  $: maxPct = distributionRows.length > 0
+    ? Math.max(...distributionRows.map((r) => r.pct))
+    : 0;
 </script>
 
 <div class="summary-panel">
@@ -82,49 +85,48 @@
       <span>100試合を実行中...</span>
     </div>
   {:else if result}
-    <table class="table table-compact summary-stats-table">
-      <tbody>
-        <tr>
-          <th>平均得点</th>
-          <td class="td-numeric">{result.mean.toFixed(2)}</td>
-          <th>中央値</th>
-          <td class="td-numeric">{result.median.toFixed(2)}</td>
-        </tr>
-        <tr>
-          <th>P10</th>
-          <td class="td-numeric">{result.p10.toFixed(2)}</td>
-          <th>P90</th>
-          <td class="td-numeric">{result.p90.toFixed(2)}</td>
-        </tr>
-        <tr>
-          <th>最小</th>
-          <td class="td-numeric">{minScore}</td>
-          <th>最大</th>
-          <td class="td-numeric">{maxScore}</td>
-        </tr>
-      </tbody>
-    </table>
+    <!-- Key metrics cards -->
+    <div class="key-metrics">
+      <div class="metric-card">
+        <span class="metric-label">平均得点</span>
+        <span class="metric-value">{result.mean.toFixed(2)}</span>
+      </div>
+      <div class="metric-card">
+        <span class="metric-label">中央値</span>
+        <span class="metric-value">{result.median.toFixed(2)}</span>
+      </div>
+    </div>
 
-    <details>
+    <!-- Sub-metrics -->
+    <div class="sub-metrics">
+      <span class="sub-metric">P10: {result.p10.toFixed(2)}</span>
+      <span class="sub-metric-sep">/</span>
+      <span class="sub-metric">P90: {result.p90.toFixed(2)}</span>
+      <span class="sub-metric-sep">|</span>
+      <span class="sub-metric">最小: {minScore}</span>
+      <span class="sub-metric-sep">/</span>
+      <span class="sub-metric">最大: {maxScore}</span>
+    </div>
+
+    <!-- Score distribution bar chart -->
+    <details open>
       <summary>得点分布</summary>
-      <table class="table table-compact table-numeric">
-        <thead>
-          <tr>
-            <th>得点</th>
-            <th>回数</th>
-            <th>割合 (%)</th>
-          </tr>
-        </thead>
-        <tbody>
-          {#each distributionRows as row}
-            <tr>
-              <td>{row.score}</td>
-              <td>{row.count}</td>
-              <td>{row.pct.toFixed(1)}</td>
-            </tr>
-          {/each}
-        </tbody>
-      </table>
+      <div class="bar-chart">
+        {#each distributionRows as row}
+          {#if row.count > 0}
+            <div class="bar-row">
+              <span class="bar-label">{row.score}点</span>
+              <div class="bar-track">
+                <div
+                  class="bar-fill"
+                  style="width: {maxPct > 0 ? (row.pct / maxPct) * 100 : 0}%"
+                ></div>
+              </div>
+              <span class="bar-pct">{row.pct.toFixed(1)}%</span>
+            </div>
+          {/if}
+        {/each}
+      </div>
     </details>
   {:else}
     <p class="hint">打線が完成すると自動で100試合を実行します。</p>
@@ -154,19 +156,60 @@
     color: var(--color-text-secondary);
   }
 
-  .summary-stats-table {
-    margin-bottom: 0.75rem;
+  /* --- Key metrics cards --- */
+  .key-metrics {
+    display: flex;
+    gap: var(--space-md);
+    margin-bottom: var(--space-md);
   }
 
-  .summary-stats-table th {
-    width: 20%;
-    text-align: left;
+  .metric-card {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: var(--color-bg-surface);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-md);
+    padding: var(--space-md) var(--space-lg);
+    box-shadow: var(--shadow-sm);
   }
 
-  .summary-stats-table td {
-    width: 30%;
+  .metric-label {
+    font-size: var(--font-sm);
+    color: var(--color-text-secondary);
+    margin-bottom: var(--space-xs);
   }
 
+  .metric-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-primary-500);
+    line-height: 1.2;
+  }
+
+  /* --- Sub-metrics --- */
+  .sub-metrics {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-xs);
+    margin-bottom: var(--space-md);
+    flex-wrap: wrap;
+  }
+
+  .sub-metric {
+    font-size: var(--font-sm);
+    color: var(--color-text-muted);
+  }
+
+  .sub-metric-sep {
+    font-size: var(--font-sm);
+    color: var(--color-text-muted);
+    opacity: 0.5;
+  }
+
+  /* --- Distribution bar chart --- */
   details {
     margin-top: var(--space-sm);
   }
@@ -175,6 +218,51 @@
     cursor: pointer;
     font-size: var(--font-base);
     color: var(--color-text-secondary);
+  }
+
+  .bar-chart {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    margin-top: var(--space-sm);
+  }
+
+  .bar-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+  }
+
+  .bar-label {
+    flex-shrink: 0;
+    width: 3rem;
+    text-align: right;
+    font-size: var(--font-sm);
+    color: var(--color-text-secondary);
+  }
+
+  .bar-track {
+    flex: 1;
+    height: 1.2rem;
+    background: var(--color-neutral-100);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+  }
+
+  .bar-fill {
+    height: 100%;
+    background: var(--color-primary-400);
+    border-radius: var(--radius-sm);
+    transition: width var(--transition-normal);
+    min-width: 2px;
+  }
+
+  .bar-pct {
+    flex-shrink: 0;
+    width: 3.5rem;
+    text-align: right;
+    font-size: var(--font-sm);
+    color: var(--color-text-muted);
   }
 
   .hint {
