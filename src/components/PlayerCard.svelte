@@ -1,6 +1,5 @@
 <script lang="ts">
   import type { Player } from '../lib/models';
-  import { calcBatterRates } from '../lib/rates';
   import { addPlayerToSelectedSlot } from '../stores/lineup';
   import PlayerDetailsModal from './PlayerDetailsModal.svelte';
 
@@ -26,7 +25,11 @@
     return value.toFixed(3).replace(/^0/, '');
   }
 
-  $: rates = player.pa > 0 ? calcBatterRates(player) : null;
+  $: avg = player.pa > 0
+    ? (player.single + player.double + player.triple + player.hr) / player.pa
+    : 0;
+
+  $: hrRate = player.pa > 0 ? player.hr / player.pa : 0;
 </script>
 
 <div class="player-card">
@@ -38,29 +41,18 @@
     <button class="detail-link" type="button" on:click={handleShowDetails}>詳細</button>
   </div>
 
-  <div class="card-stats">
-    <span class="stat-item">
-      <span class="stat-label">PA</span>
-      <span class="stat-value">{player.pa}</span>
-    </span>
-    {#if rates}
+  <div class="card-body">
+    <div class="card-stats">
+      <span class="stat-item">
+        <span class="stat-label">打率</span>
+        <span class="stat-value mono">{fmtRate(avg)}</span>
+      </span>
       <span class="stat-item">
         <span class="stat-label">HR率</span>
-        <span class="stat-value mono">{fmtRate(rates.hr)}</span>
+        <span class="stat-value mono">{fmtRate(hrRate)}</span>
       </span>
-      <span class="stat-item">
-        <span class="stat-label">四死率</span>
-        <span class="stat-value mono">{fmtRate(rates.bb_hbp)}</span>
-      </span>
-      <span class="stat-item">
-        <span class="stat-label">K率</span>
-        <span class="stat-value mono">{fmtRate(rates.k)}</span>
-      </span>
-    {/if}
-  </div>
-
-  <div class="card-footer">
-    <button class="add-btn" type="button" on:click={handleAdd}>追加</button>
+    </div>
+    <button class="add-btn" type="button" on:click={handleAdd} title="ラインナップに追加">+</button>
   </div>
 </div>
 
@@ -72,11 +64,11 @@
   .player-card {
     border: 1px solid var(--color-border);
     border-radius: var(--radius-md);
-    padding: var(--space-sm);
+    padding: var(--space-xs) var(--space-sm);
     background: var(--color-bg-surface);
     display: flex;
     flex-direction: column;
-    gap: var(--space-xs);
+    gap: 0.15rem;
     transition: box-shadow var(--transition-fast), transform var(--transition-fast);
   }
 
@@ -101,7 +93,7 @@
 
   .player-name {
     font-weight: 700;
-    font-size: var(--font-sm);
+    font-size: var(--font-base);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -112,6 +104,13 @@
     color: var(--color-text-muted);
     font-size: var(--font-xs);
     white-space: nowrap;
+  }
+
+  .card-body {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-xs);
   }
 
   .card-stats {
@@ -142,13 +141,6 @@
     font-size: var(--font-xs);
   }
 
-  .card-footer {
-    display: flex;
-    justify-content: flex-end;
-    padding-top: var(--space-xs);
-    border-top: 1px solid var(--color-border-light);
-  }
-
   .detail-link {
     padding: 0;
     border: none;
@@ -166,17 +158,19 @@
   }
 
   .add-btn {
-    min-height: 32px;
-    padding: var(--space-xs) var(--space-md);
+    min-height: 28px;
+    min-width: 28px;
+    padding: 0;
     border: 1px solid var(--color-primary-500);
     border-radius: var(--radius-sm);
     background: var(--color-primary-500);
     color: #fff;
     cursor: pointer;
-    font-size: var(--font-sm);
+    font-size: var(--font-base);
+    font-weight: 700;
+    line-height: 1;
     transition: background-color var(--transition-fast);
     flex-shrink: 0;
-    width: 100%;
   }
 
   .add-btn:hover {

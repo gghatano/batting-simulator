@@ -108,7 +108,7 @@
 
   .cards {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     gap: 0.5rem;
     max-height: 70vh;
     overflow-y: auto;
