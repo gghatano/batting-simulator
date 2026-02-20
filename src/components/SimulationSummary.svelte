@@ -82,32 +82,32 @@
       <span>100試合を実行中...</span>
     </div>
   {:else if result}
-    <table class="stats-table">
+    <table class="table table-compact summary-stats-table">
       <tbody>
         <tr>
           <th>平均得点</th>
-          <td>{result.mean.toFixed(2)}</td>
+          <td class="td-numeric">{result.mean.toFixed(2)}</td>
           <th>中央値</th>
-          <td>{result.median.toFixed(2)}</td>
+          <td class="td-numeric">{result.median.toFixed(2)}</td>
         </tr>
         <tr>
           <th>P10</th>
-          <td>{result.p10.toFixed(2)}</td>
+          <td class="td-numeric">{result.p10.toFixed(2)}</td>
           <th>P90</th>
-          <td>{result.p90.toFixed(2)}</td>
+          <td class="td-numeric">{result.p90.toFixed(2)}</td>
         </tr>
         <tr>
           <th>最小</th>
-          <td>{minScore}</td>
+          <td class="td-numeric">{minScore}</td>
           <th>最大</th>
-          <td>{maxScore}</td>
+          <td class="td-numeric">{maxScore}</td>
         </tr>
       </tbody>
     </table>
 
     <details>
       <summary>得点分布</summary>
-      <table class="distribution-table">
+      <table class="table table-compact table-numeric">
         <thead>
           <tr>
             <th>得点</th>
@@ -118,9 +118,9 @@
         <tbody>
           {#each distributionRows as row}
             <tr>
-              <td class="num">{row.score}</td>
-              <td class="num">{row.count}</td>
-              <td class="num">{row.pct.toFixed(1)}</td>
+              <td>{row.score}</td>
+              <td>{row.count}</td>
+              <td>{row.pct.toFixed(1)}</td>
             </tr>
           {/each}
         </tbody>
@@ -154,79 +154,27 @@
     color: var(--color-text-secondary);
   }
 
-  .spinner {
-    display: inline-block;
-    width: 1rem;
-    height: 1rem;
-    border: 2px solid var(--color-border);
-    border-top-color: var(--color-primary-500);
-    border-radius: 50%;
-    animation: spin 0.6s linear infinite;
-  }
-
-  @keyframes spin {
-    to {
-      transform: rotate(360deg);
-    }
-  }
-
-  .stats-table {
-    border-collapse: collapse;
-    width: 100%;
+  .summary-stats-table {
     margin-bottom: 0.75rem;
   }
 
-  .stats-table th,
-  .stats-table td {
-    border: 1px solid var(--color-border);
-    padding: 0.35rem 0.75rem;
+  .summary-stats-table th {
+    width: 20%;
     text-align: left;
   }
 
-  .stats-table th {
-    background: var(--color-bg-muted);
-    width: 20%;
-    font-weight: 600;
-    font-size: var(--font-base);
-  }
-
-  .stats-table td {
+  .summary-stats-table td {
     width: 30%;
-    text-align: right;
-    font-variant-numeric: tabular-nums;
   }
 
   details {
-    margin-top: 0.5rem;
+    margin-top: var(--space-sm);
   }
 
   details summary {
     cursor: pointer;
     font-size: var(--font-base);
     color: var(--color-text-secondary);
-  }
-
-  .distribution-table {
-    border-collapse: collapse;
-    width: 100%;
-    margin-top: var(--space-sm);
-  }
-
-  .distribution-table th,
-  .distribution-table td {
-    border: 1px solid var(--color-border);
-    padding: var(--space-xs) var(--space-sm);
-    font-size: var(--font-sm);
-  }
-
-  .distribution-table thead th {
-    background: var(--color-bg-muted);
-    text-align: center;
-  }
-
-  .distribution-table .num {
-    text-align: right;
-    font-variant-numeric: tabular-nums;
   }
 
   .hint {

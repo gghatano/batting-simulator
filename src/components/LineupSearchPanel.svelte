@@ -130,7 +130,7 @@
   {#if searchResult}
     <div class="results">
       <h4>平均得点 上位5打線</h4>
-      <table class="result-table">
+      <table class="table table-compact result-table">
         <thead>
           <tr>
             <th class="rank-col">#</th>
@@ -144,15 +144,15 @@
             <tr>
               <td class="rank">{i + 1}</td>
               <td class="order">{formatOrder(candidate.order)}</td>
-              <td class="num">{candidate.mean.toFixed(3)}</td>
-              <td class="num">{Math.sqrt(candidate.variance).toFixed(3)}</td>
+              <td class="td-numeric">{candidate.mean.toFixed(3)}</td>
+              <td class="td-numeric">{Math.sqrt(candidate.variance).toFixed(3)}</td>
             </tr>
           {/each}
         </tbody>
       </table>
 
       <h4>低分散（安定）上位5打線</h4>
-      <table class="result-table">
+      <table class="table table-compact result-table">
         <thead>
           <tr>
             <th class="rank-col">#</th>
@@ -166,8 +166,8 @@
             <tr>
               <td class="rank">{i + 1}</td>
               <td class="order">{formatOrder(candidate.order)}</td>
-              <td class="num">{candidate.mean.toFixed(3)}</td>
-              <td class="num">{candidate.variance.toFixed(3)}</td>
+              <td class="td-numeric">{candidate.mean.toFixed(3)}</td>
+              <td class="td-numeric">{candidate.variance.toFixed(3)}</td>
             </tr>
           {/each}
         </tbody>
@@ -192,21 +192,21 @@
   }
 
   .config-row {
-    margin-bottom: 0.5rem;
+    margin-bottom: var(--space-sm);
   }
 
   .config-row label {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    font-size: 0.9rem;
+    gap: var(--space-sm);
+    font-size: var(--font-base);
   }
 
   .config-row input[type='number'],
   .config-row input[type='text'] {
     width: 120px;
-    padding: 0.25rem 0.5rem;
-    font-size: 0.9rem;
+    padding: var(--space-xs) var(--space-sm);
+    font-size: var(--font-base);
   }
 
   .hint {
@@ -215,12 +215,12 @@
   }
 
   .action-row {
-    margin: 0.75rem 0;
+    margin: var(--space-md) 0;
   }
 
   .action-row button {
-    padding: 0.4rem 1.2rem;
-    font-size: 0.95rem;
+    padding: var(--space-sm) var(--space-lg);
+    font-size: var(--font-base);
     cursor: pointer;
     background: var(--color-primary-500);
     color: #fff;
@@ -248,48 +248,14 @@
     font-size: var(--font-base);
   }
 
-  .spinner {
-    display: inline-block;
-    width: 1rem;
-    height: 1rem;
-    border: 2px solid var(--color-border);
-    border-top-color: var(--color-primary-500);
-    border-radius: 50%;
-    animation: spin 0.6s linear infinite;
-  }
-
-  @keyframes spin {
-    to {
-      transform: rotate(360deg);
-    }
-  }
-
   .results {
-    margin-top: 0.75rem;
+    margin-top: var(--space-md);
   }
 
   .results h4 {
     margin: var(--space-lg) 0 var(--space-sm) 0;
-    font-size: 0.95rem;
+    font-size: var(--font-base);
     color: var(--color-text);
-  }
-
-  .result-table {
-    border-collapse: collapse;
-    width: 100%;
-    font-size: 0.85rem;
-  }
-
-  .result-table th,
-  .result-table td {
-    border: 1px solid var(--color-border);
-    padding: 0.35rem 0.5rem;
-  }
-
-  .result-table thead th {
-    background: var(--color-bg-muted);
-    text-align: center;
-    font-weight: 600;
   }
 
   .rank-col {
@@ -306,12 +272,7 @@
   }
 
   .order {
-    font-size: 0.8rem;
+    font-size: var(--font-sm);
     word-break: break-all;
-  }
-
-  .num {
-    text-align: right;
-    font-variant-numeric: tabular-nums;
   }
 </style>
