@@ -146,7 +146,7 @@
     border-radius: 3px;
     background: var(--color-neutral-50);
     cursor: pointer;
-    font-size: 0.75rem;
+    font-size: var(--font-xs);
     line-height: 1;
     transition: background-color var(--transition-fast), border-color var(--transition-fast);
   }

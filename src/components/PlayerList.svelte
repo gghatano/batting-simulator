@@ -72,8 +72,7 @@
   }
 
   h2 {
-    margin: 0 0 0.25rem;
-    font-size: 1.1rem;
+    margin: 0 0 var(--space-xs);
   }
 
   .filters {
@@ -90,7 +89,7 @@
   }
 
   .filter-label {
-    font-size: 0.75rem;
+    font-size: var(--font-xs);
     font-weight: 600;
     color: var(--color-text-secondary);
   }

@@ -149,14 +149,12 @@
 
   .modal-title {
     margin: 0;
-    font-size: 1.1rem;
-    font-weight: 700;
   }
 
   .close-btn {
     background: none;
     border: none;
-    font-size: 1.5rem;
+    font-size: var(--font-2xl);
     line-height: 1;
     cursor: pointer;
     color: var(--color-text-muted);
@@ -175,7 +173,7 @@
     display: flex;
     justify-content: space-between;
     padding: 0.25rem 0;
-    font-size: 0.85rem;
+    font-size: var(--font-sm);
   }
 
   .info-label {

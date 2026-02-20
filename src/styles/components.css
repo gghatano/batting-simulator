@@ -36,6 +36,7 @@
 .td-numeric {
   text-align: right;
   font-variant-numeric: tabular-nums;
+  font-family: 'SF Mono', 'Cascadia Code', 'Consolas', monospace, system-ui;
 }
 
 /* Compact variant — reduced padding */

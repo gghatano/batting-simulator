@@ -103,7 +103,7 @@
 
   .player-team {
     color: var(--color-text-muted);
-    font-size: 0.7rem;
+    font-size: var(--font-xs);
     white-space: nowrap;
   }
 
@@ -130,7 +130,8 @@
   }
 
   .stat-value.mono {
-    font-family: monospace;
+    font-variant-numeric: tabular-nums;
+    font-family: 'SF Mono', 'Cascadia Code', 'Consolas', monospace, system-ui;
     font-size: var(--font-xs);
   }
 

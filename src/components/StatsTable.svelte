@@ -58,7 +58,7 @@
 
 <style>
   .stats-table {
-    margin-bottom: 1.5rem;
+    margin-bottom: var(--space-xl);
   }
 
   .center {

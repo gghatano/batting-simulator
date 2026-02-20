@@ -40,6 +40,39 @@ button {
 }
 
 /* --------------------------------------------------
+ * Heading Hierarchy
+ * Task 203: タイポグラフィの体系化
+ * -------------------------------------------------- */
+h1 {
+  font-size: var(--font-2xl);
+  font-weight: 700;
+}
+
+h2 {
+  font-size: var(--font-xl);
+  font-weight: 700;
+}
+
+h3 {
+  font-size: var(--font-lg);
+  font-weight: 600;
+}
+
+h4 {
+  font-size: var(--font-base);
+  font-weight: 600;
+}
+
+/* --------------------------------------------------
+ * Numeric Utility
+ * Task 203: 数値表示用ユーティリティ
+ * -------------------------------------------------- */
+.numeric {
+  font-variant-numeric: tabular-nums;
+  font-family: 'SF Mono', 'Cascadia Code', 'Consolas', monospace, system-ui;
+}
+
+/* --------------------------------------------------
  * Images
  * -------------------------------------------------- */
 img {

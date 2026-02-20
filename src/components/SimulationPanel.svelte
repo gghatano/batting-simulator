@@ -184,20 +184,20 @@
   }
 
   .config-row {
-    margin-bottom: 0.75rem;
+    margin-bottom: var(--space-md);
   }
 
   .config-row label {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: var(--space-sm);
   }
 
   .config-row input[type='number'],
   .config-row input[type='text'] {
     width: 140px;
-    padding: 0.25rem 0.5rem;
-    font-size: 1rem;
+    padding: var(--space-xs) var(--space-sm);
+    font-size: var(--font-base);
   }
 
   .hint {
