@@ -41,7 +41,9 @@
     on:click
     type="button"
     aria-pressed={selected}
+    aria-label="{index + 1}番打者{slot ? ': ' + slot.name : ': 未設定'}{selected ? ' (選択中)' : ''}"
   >
+    {#if selected}<span class="selected-indicator" aria-hidden="true">▶</span>{/if}
     <span class="order">{index + 1}</span>
     {#if slot}
       <span class="player-name">{slot.name}</span>
@@ -56,6 +58,7 @@
       class="action-btn move-btn"
       type="button"
       title="上に移動"
+      aria-label="上に移動"
       disabled={isFirst || isEmpty}
       on:click|stopPropagation={() => dispatch('moveUp', index)}
     >↑</button>
@@ -63,6 +66,7 @@
       class="action-btn move-btn"
       type="button"
       title="下に移動"
+      aria-label="下に移動"
       disabled={isLast || isEmpty}
       on:click|stopPropagation={() => dispatch('moveDown', index)}
     >↓</button>
@@ -70,6 +74,7 @@
       class="action-btn clear-btn"
       type="button"
       title="クリア"
+      aria-label="クリア"
       disabled={isEmpty}
       on:click|stopPropagation={() => dispatch('clear', index)}
     >×</button>
@@ -140,6 +145,12 @@
   .selected .order {
     background: var(--color-primary-700);
     color: var(--color-bg-surface);
+  }
+
+  .selected-indicator {
+    color: var(--color-primary-500);
+    font-size: var(--font-sm);
+    flex-shrink: 0;
   }
 
   .player-name {

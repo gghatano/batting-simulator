@@ -10,27 +10,51 @@
   onMount(() => {
     loadPlayers();
   });
+
+  type TabId = 'lineup' | 'simulation';
+  const tabs: { id: TabId; label: string }[] = [
+    { id: 'lineup', label: '⚾ 打線作成' },
+    { id: 'simulation', label: '📊 シミュレーション' },
+  ];
+
+  function handleTabKeydown(e: KeyboardEvent): void {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+      e.preventDefault();
+      const currentIndex = tabs.findIndex(t => t.id === $activeTab);
+      let nextIndex: number;
+      if (e.key === 'ArrowRight') {
+        nextIndex = (currentIndex + 1) % tabs.length;
+      } else {
+        nextIndex = (currentIndex - 1 + tabs.length) % tabs.length;
+      }
+      activeTab.set(tabs[nextIndex].id);
+      // Focus the newly active tab button
+      const tabButtons = (e.currentTarget as HTMLElement).querySelectorAll<HTMLElement>('[role="tab"]');
+      tabButtons[nextIndex]?.focus();
+    }
+  }
 </script>
 
 <header class="app-header">
   <h1 class="app-title">⚾ Batting Simulator</h1>
 </header>
 
-<nav class="tabs">
-  <button
-    class="tab"
-    class:active={$activeTab === 'lineup'}
-    on:click={() => activeTab.set('lineup')}
-  >
-    ⚾ 打線作成
-  </button>
-  <button
-    class="tab"
-    class:active={$activeTab === 'simulation'}
-    on:click={() => activeTab.set('simulation')}
-  >
-    📊 シミュレーション
-  </button>
+<!-- svelte-ignore a11y-interactive-supports-focus a11y-no-noninteractive-element-to-interactive-role -->
+<nav class="tabs" role="tablist" aria-label="メインナビゲーション" on:keydown={handleTabKeydown}>
+  {#each tabs as tab (tab.id)}
+    <button
+      class="tab"
+      class:active={$activeTab === tab.id}
+      on:click={() => activeTab.set(tab.id)}
+      role="tab"
+      id="tab-{tab.id}"
+      aria-selected={$activeTab === tab.id}
+      aria-controls="tabpanel-{tab.id}"
+      tabindex={$activeTab === tab.id ? 0 : -1}
+    >
+      {tab.label}
+    </button>
+  {/each}
 </nav>
 
 <main>
@@ -40,7 +64,7 @@
       <p>Loading players...</p>
     </div>
   {:else if $playersError}
-    <div class="alert-danger">
+    <div class="alert-danger" role="alert" aria-live="polite">
       <span class="alert-icon">&#x26A0;&#xFE0F;</span>
       <div class="alert-body">
         <p class="alert-message">Error: {$playersError}</p>
@@ -53,12 +77,12 @@
     <p class="player-count">{$playersStore.length} players loaded.</p>
 
     {#if $activeTab === 'lineup'}
-      <div class="layout tab-fade-in">
+      <div class="layout tab-fade-in" role="tabpanel" id="tabpanel-lineup" aria-labelledby="tab-lineup">
         <PlayerList />
         <LineupPanel />
       </div>
     {:else}
-      <div class="sim-layout tab-fade-in">
+      <div class="sim-layout tab-fade-in" role="tabpanel" id="tabpanel-simulation" aria-labelledby="tab-simulation">
         <SimulationPanel />
         <LineupSummary />
       </div>
