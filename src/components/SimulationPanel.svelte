@@ -4,6 +4,7 @@
   import { calcBatterRates } from '../lib/rates';
   import { simulateN } from '../lib/sim/simulate';
   import type { Player, BatterRates } from '../lib/models';
+  import StatsTable from './StatsTable.svelte';
 
   let n: number = 10_000;
   let seedInput: string = '';
@@ -55,6 +56,8 @@
 </script>
 
 <div class="simulation-panel">
+  <StatsTable />
+
   <h2>シミュレーション設定</h2>
 
   <div class="config-row">
