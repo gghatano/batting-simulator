@@ -2,12 +2,23 @@
   import type { Player } from '../lib/models';
   import { calcBatterRates } from '../lib/rates';
   import { addPlayerToSelectedSlot } from '../stores/lineup';
+  import PlayerDetailsModal from './PlayerDetailsModal.svelte';
 
   /** The player to display */
   export let player: Player;
 
+  let showDetails = false;
+
   function handleAdd(): void {
     addPlayerToSelectedSlot(player);
+  }
+
+  function handleShowDetails(): void {
+    showDetails = true;
+  }
+
+  function handleCloseDetails(): void {
+    showDetails = false;
   }
 
   /** Format a rate to 3 decimal places (e.g. ".285") */
@@ -24,7 +35,10 @@
       <span class="player-name">{player.name}</span>
       <span class="player-team">{player.team}</span>
     </div>
-    <button class="add-btn" type="button" on:click={handleAdd}>追加</button>
+    <div class="card-actions">
+      <button class="detail-btn" type="button" on:click={handleShowDetails}>詳細</button>
+      <button class="add-btn" type="button" on:click={handleAdd}>追加</button>
+    </div>
   </div>
 
   <div class="card-stats">
@@ -48,6 +62,10 @@
     {/if}
   </div>
 </div>
+
+{#if showDetails}
+  <PlayerDetailsModal {player} onClose={handleCloseDetails} />
+{/if}
 
 <style>
   .player-card {
@@ -113,6 +131,27 @@
   .stat-value.mono {
     font-family: monospace;
     font-size: 0.72rem;
+  }
+
+  .card-actions {
+    display: flex;
+    gap: 0.25rem;
+    flex-shrink: 0;
+  }
+
+  .detail-btn {
+    padding: 0.15rem 0.5rem;
+    border: 1px solid #6b7280;
+    border-radius: 4px;
+    background: #fff;
+    color: #374151;
+    cursor: pointer;
+    font-size: 0.72rem;
+    transition: background-color 0.15s;
+  }
+
+  .detail-btn:hover {
+    background: #f3f4f6;
   }
 
   .add-btn {
