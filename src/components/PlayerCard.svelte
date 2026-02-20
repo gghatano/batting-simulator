@@ -20,68 +20,32 @@
 
 <div class="player-card">
   <div class="card-header">
-    <span class="player-name">{player.name}</span>
-    <span class="player-team">{player.team}</span>
+    <div class="card-title">
+      <span class="player-name">{player.name}</span>
+      <span class="player-team">{player.team}</span>
+    </div>
+    <button class="add-btn" type="button" on:click={handleAdd}>追加</button>
   </div>
 
   <div class="card-stats">
-    <table>
-      <thead>
-        <tr>
-          <th>PA</th>
-          <th>1B</th>
-          <th>2B</th>
-          <th>3B</th>
-          <th>HR</th>
-          <th>BB+HBP</th>
-          <th>SO</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>{player.pa}</td>
-          <td>{player.single}</td>
-          <td>{player.double}</td>
-          <td>{player.triple}</td>
-          <td>{player.hr}</td>
-          <td>{player.bb + player.hbp}</td>
-          <td>{player.so}</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  {#if rates}
-    <div class="card-rates">
-      <table>
-        <thead>
-          <tr>
-            <th>1B率</th>
-            <th>2B率</th>
-            <th>3B率</th>
-            <th>HR率</th>
-            <th>四死率</th>
-            <th>K率</th>
-            <th>OUT率</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>{fmtRate(rates.single)}</td>
-            <td>{fmtRate(rates.double)}</td>
-            <td>{fmtRate(rates.triple)}</td>
-            <td>{fmtRate(rates.hr)}</td>
-            <td>{fmtRate(rates.bb_hbp)}</td>
-            <td>{fmtRate(rates.k)}</td>
-            <td>{fmtRate(rates.out)}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  {/if}
-
-  <div class="card-actions">
-    <button class="add-btn" type="button" on:click={handleAdd}>追加</button>
+    <span class="stat-item">
+      <span class="stat-label">PA</span>
+      <span class="stat-value">{player.pa}</span>
+    </span>
+    {#if rates}
+      <span class="stat-item">
+        <span class="stat-label">HR率</span>
+        <span class="stat-value mono">{fmtRate(rates.hr)}</span>
+      </span>
+      <span class="stat-item">
+        <span class="stat-label">四死率</span>
+        <span class="stat-value mono">{fmtRate(rates.bb_hbp)}</span>
+      </span>
+      <span class="stat-item">
+        <span class="stat-label">K率</span>
+        <span class="stat-value mono">{fmtRate(rates.k)}</span>
+      </span>
+    {/if}
   </div>
 </div>
 
@@ -89,69 +53,78 @@
   .player-card {
     border: 1px solid #d1d5db;
     border-radius: 6px;
-    padding: 0.75rem;
+    padding: 0.4rem 0.5rem;
     background: #fff;
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 0.25rem;
   }
 
   .card-header {
     display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.25rem;
+  }
+
+  .card-title {
+    display: flex;
     align-items: baseline;
-    gap: 0.5rem;
+    gap: 0.3rem;
+    min-width: 0;
   }
 
   .player-name {
     font-weight: 700;
-    font-size: 1rem;
+    font-size: 0.85rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .player-team {
     color: #6b7280;
-    font-size: 0.8rem;
+    font-size: 0.7rem;
+    white-space: nowrap;
   }
 
-  .card-stats table,
-  .card-rates table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.8rem;
-    text-align: center;
-  }
-
-  .card-stats th,
-  .card-rates th {
-    background: #f3f4f6;
-    padding: 0.2rem 0.3rem;
-    font-weight: 600;
-    border-bottom: 1px solid #e5e7eb;
-  }
-
-  .card-stats td,
-  .card-rates td {
-    padding: 0.2rem 0.3rem;
-  }
-
-  .card-rates td {
-    font-family: monospace;
-    font-size: 0.78rem;
-  }
-
-  .card-actions {
+  .card-stats {
     display: flex;
-    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 0.15rem 0.5rem;
+    font-size: 0.72rem;
+  }
+
+  .stat-item {
+    display: flex;
+    align-items: baseline;
+    gap: 0.2rem;
+  }
+
+  .stat-label {
+    color: #6b7280;
+    font-weight: 600;
+  }
+
+  .stat-value {
+    color: #111827;
+  }
+
+  .stat-value.mono {
+    font-family: monospace;
+    font-size: 0.72rem;
   }
 
   .add-btn {
-    padding: 0.3rem 0.75rem;
+    padding: 0.15rem 0.5rem;
     border: 1px solid #3b82f6;
     border-radius: 4px;
     background: #3b82f6;
     color: #fff;
     cursor: pointer;
-    font-size: 0.85rem;
+    font-size: 0.72rem;
     transition: background-color 0.15s;
+    flex-shrink: 0;
   }
 
   .add-btn:hover {
