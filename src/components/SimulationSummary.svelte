@@ -82,32 +82,32 @@
       <span>100試合を実行中...</span>
     </div>
   {:else if result}
-    <table class="stats-table">
+    <table class="table table-compact summary-stats-table">
       <tbody>
         <tr>
           <th>平均得点</th>
-          <td>{result.mean.toFixed(2)}</td>
+          <td class="td-numeric">{result.mean.toFixed(2)}</td>
           <th>中央値</th>
-          <td>{result.median.toFixed(2)}</td>
+          <td class="td-numeric">{result.median.toFixed(2)}</td>
         </tr>
         <tr>
           <th>P10</th>
-          <td>{result.p10.toFixed(2)}</td>
+          <td class="td-numeric">{result.p10.toFixed(2)}</td>
           <th>P90</th>
-          <td>{result.p90.toFixed(2)}</td>
+          <td class="td-numeric">{result.p90.toFixed(2)}</td>
         </tr>
         <tr>
           <th>最小</th>
-          <td>{minScore}</td>
+          <td class="td-numeric">{minScore}</td>
           <th>最大</th>
-          <td>{maxScore}</td>
+          <td class="td-numeric">{maxScore}</td>
         </tr>
       </tbody>
     </table>
 
     <details>
       <summary>得点分布</summary>
-      <table class="distribution-table">
+      <table class="table table-compact table-numeric">
         <thead>
           <tr>
             <th>得点</th>
@@ -118,9 +118,9 @@
         <tbody>
           {#each distributionRows as row}
             <tr>
-              <td class="num">{row.score}</td>
-              <td class="num">{row.count}</td>
-              <td class="num">{row.pct.toFixed(1)}</td>
+              <td>{row.score}</td>
+              <td>{row.count}</td>
+              <td>{row.pct.toFixed(1)}</td>
             </tr>
           {/each}
         </tbody>
@@ -133,105 +133,53 @@
 
 <style>
   .summary-panel {
-    background: #f7f9fc;
-    border: 1px solid #d0d7de;
-    border-radius: 8px;
-    padding: 1rem;
-    margin-bottom: 1.5rem;
+    background: var(--color-bg-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg);
+    margin-bottom: var(--space-xl);
   }
 
   .summary-panel h3 {
     margin: 0 0 0.75rem 0;
-    font-size: 1rem;
-    color: #333;
+    font-size: var(--font-lg);
+    color: var(--color-text);
   }
 
   .loading {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 0;
-    color: #555;
+    gap: var(--space-sm);
+    padding: var(--space-sm) 0;
+    color: var(--color-text-secondary);
   }
 
-  .spinner {
-    display: inline-block;
-    width: 1rem;
-    height: 1rem;
-    border: 2px solid #ccc;
-    border-top-color: #333;
-    border-radius: 50%;
-    animation: spin 0.6s linear infinite;
-  }
-
-  @keyframes spin {
-    to {
-      transform: rotate(360deg);
-    }
-  }
-
-  .stats-table {
-    border-collapse: collapse;
-    width: 100%;
+  .summary-stats-table {
     margin-bottom: 0.75rem;
   }
 
-  .stats-table th,
-  .stats-table td {
-    border: 1px solid #d0d7de;
-    padding: 0.35rem 0.75rem;
+  .summary-stats-table th {
+    width: 20%;
     text-align: left;
   }
 
-  .stats-table th {
-    background: #eef1f5;
-    width: 20%;
-    font-weight: 600;
-    font-size: 0.9rem;
-  }
-
-  .stats-table td {
+  .summary-stats-table td {
     width: 30%;
-    text-align: right;
-    font-variant-numeric: tabular-nums;
   }
 
   details {
-    margin-top: 0.5rem;
+    margin-top: var(--space-sm);
   }
 
   details summary {
     cursor: pointer;
-    font-size: 0.9rem;
-    color: #555;
-  }
-
-  .distribution-table {
-    border-collapse: collapse;
-    width: 100%;
-    margin-top: 0.5rem;
-  }
-
-  .distribution-table th,
-  .distribution-table td {
-    border: 1px solid #d0d7de;
-    padding: 0.25rem 0.5rem;
-    font-size: 0.85rem;
-  }
-
-  .distribution-table thead th {
-    background: #eef1f5;
-    text-align: center;
-  }
-
-  .distribution-table .num {
-    text-align: right;
-    font-variant-numeric: tabular-nums;
+    font-size: var(--font-base);
+    color: var(--color-text-secondary);
   }
 
   .hint {
-    color: #888;
-    font-size: 0.9rem;
+    color: var(--color-text-muted);
+    font-size: var(--font-base);
     margin: 0;
   }
 </style>

@@ -20,7 +20,7 @@
 
 <div class="stats-table">
   <h2>打者別イベント率</h2>
-  <table>
+  <table class="table table-compact table-zebra">
     <thead>
       <tr>
         <th>打順</th>
@@ -40,13 +40,13 @@
           <td class="center">{i + 1}</td>
           {#if entry}
             <td>{entry.player.name}</td>
-            <td class="num">{fmt(entry.rates.single)}</td>
-            <td class="num">{fmt(entry.rates.double)}</td>
-            <td class="num">{fmt(entry.rates.triple)}</td>
-            <td class="num">{fmt(entry.rates.hr)}</td>
-            <td class="num">{fmt(entry.rates.bb_hbp)}</td>
-            <td class="num">{fmt(entry.rates.k)}</td>
-            <td class="num">{fmt(entry.rates.out)}</td>
+            <td class="td-numeric">{fmt(entry.rates.single)}</td>
+            <td class="td-numeric">{fmt(entry.rates.double)}</td>
+            <td class="td-numeric">{fmt(entry.rates.triple)}</td>
+            <td class="td-numeric">{fmt(entry.rates.hr)}</td>
+            <td class="td-numeric">{fmt(entry.rates.bb_hbp)}</td>
+            <td class="td-numeric">{fmt(entry.rates.k)}</td>
+            <td class="td-numeric">{fmt(entry.rates.out)}</td>
           {:else}
             <td class="empty" colspan="8">—</td>
           {/if}
@@ -61,34 +61,12 @@
     margin-bottom: 1.5rem;
   }
 
-  table {
-    border-collapse: collapse;
-    width: 100%;
-    font-size: 0.9rem;
-  }
-
-  th, td {
-    border: 1px solid #ccc;
-    padding: 0.35rem 0.6rem;
-  }
-
-  th {
-    background: #f8f8f8;
-    text-align: center;
-    white-space: nowrap;
-  }
-
   .center {
     text-align: center;
   }
 
-  .num {
-    text-align: right;
-    font-variant-numeric: tabular-nums;
-  }
-
   .empty {
     text-align: center;
-    color: #999;
+    color: var(--color-text-muted);
   }
 </style>

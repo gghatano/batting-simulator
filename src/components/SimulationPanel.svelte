@@ -127,29 +127,29 @@
   {#if result}
     <div class="results">
       <h2>結果サマリ</h2>
-      <table>
+      <table class="table result-summary-table">
         <tbody>
           <tr>
             <th>平均得点 (Mean)</th>
-            <td>{result.mean.toFixed(2)}</td>
+            <td class="td-numeric">{result.mean.toFixed(2)}</td>
           </tr>
           <tr>
             <th>中央値 (Median)</th>
-            <td>{result.median.toFixed(2)}</td>
+            <td class="td-numeric">{result.median.toFixed(2)}</td>
           </tr>
           <tr>
             <th>P10</th>
-            <td>{result.p10.toFixed(2)}</td>
+            <td class="td-numeric">{result.p10.toFixed(2)}</td>
           </tr>
           <tr>
             <th>P90</th>
-            <td>{result.p90.toFixed(2)}</td>
+            <td class="td-numeric">{result.p90.toFixed(2)}</td>
           </tr>
         </tbody>
       </table>
 
       <h2>得点分布</h2>
-      <table class="distribution-table">
+      <table class="table table-compact table-numeric distribution-table">
         <thead>
           <tr>
             <th>得点</th>
@@ -160,17 +160,17 @@
         <tbody>
           {#each distributionRows as row}
             <tr>
-              <td class="num">{row.score}</td>
-              <td class="num">{row.count}</td>
-              <td class="num">{row.pct.toFixed(2)}</td>
+              <td>{row.score}</td>
+              <td>{row.count}</td>
+              <td>{row.pct.toFixed(2)}</td>
             </tr>
           {/each}
         </tbody>
         <tfoot>
           <tr>
             <th>合計</th>
-            <td class="num">{totalTrials}</td>
-            <td class="num">{distributionRows.reduce((a, r) => a + r.pct, 0).toFixed(2)}</td>
+            <td>{totalTrials}</td>
+            <td>{distributionRows.reduce((a, r) => a + r.pct, 0).toFixed(2)}</td>
           </tr>
         </tfoot>
       </table>
@@ -201,17 +201,17 @@
   }
 
   .hint {
-    color: #888;
-    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    font-size: var(--font-sm);
   }
 
   .action-row {
-    margin: 1rem 0;
+    margin: var(--space-lg) 0;
   }
 
   .action-row button {
-    padding: 0.5rem 1.5rem;
-    font-size: 1rem;
+    padding: var(--space-sm) var(--space-xl);
+    font-size: var(--font-lg);
     cursor: pointer;
   }
 
@@ -221,61 +221,34 @@
   }
 
   .validation-msg {
-    color: #c00;
-    margin-top: 0.5rem;
-    font-size: 0.9rem;
+    color: var(--color-danger-600);
+    margin-top: var(--space-sm);
+    font-size: var(--font-base);
   }
 
   .loading {
-    padding: 1rem;
-    background: #f0f0f0;
-    border-radius: 4px;
-    margin: 1rem 0;
+    padding: var(--space-lg);
+    background: var(--color-bg-muted);
+    border-radius: var(--radius-sm);
+    margin: var(--space-lg) 0;
   }
 
   .results {
-    margin-top: 1rem;
+    margin-top: var(--space-lg);
   }
 
-  .results table {
-    border-collapse: collapse;
-    width: 100%;
-  }
-
-  .results th,
-  .results td {
-    border: 1px solid #ccc;
-    padding: 0.5rem 1rem;
+  .result-summary-table th {
     text-align: left;
-  }
-
-  .results th {
-    background: #f8f8f8;
     width: 50%;
   }
 
   .distribution-table {
-    margin-top: 0.5rem;
-  }
-
-  .distribution-table th,
-  .distribution-table td {
-    border: 1px solid #ccc;
-    padding: 0.35rem 0.75rem;
-  }
-
-  .distribution-table thead th {
-    background: #f8f8f8;
-    text-align: center;
+    margin-top: var(--space-sm);
   }
 
   .distribution-table tfoot th,
   .distribution-table tfoot td {
-    background: #f0f0f0;
+    background: var(--color-bg-muted);
     font-weight: bold;
-  }
-
-  .distribution-table .num {
-    text-align: right;
   }
 </style>

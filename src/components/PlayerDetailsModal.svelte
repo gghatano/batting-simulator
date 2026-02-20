@@ -52,7 +52,7 @@
 
       {#if rates}
         <h3 class="section-title">安打率</h3>
-        <table class="rates-table">
+        <table class="table table-compact rates-table">
           <thead>
             <tr>
               <th>項目</th>
@@ -63,29 +63,29 @@
           <tbody>
             <tr>
               <td>単打 (1B)</td>
-              <td class="mono">{fmtRate(rates.single)}</td>
-              <td class="mono">{player.single}</td>
+              <td class="td-numeric">{fmtRate(rates.single)}</td>
+              <td class="td-numeric">{player.single}</td>
             </tr>
             <tr>
               <td>二塁打 (2B)</td>
-              <td class="mono">{fmtRate(rates.double)}</td>
-              <td class="mono">{player.double}</td>
+              <td class="td-numeric">{fmtRate(rates.double)}</td>
+              <td class="td-numeric">{player.double}</td>
             </tr>
             <tr>
               <td>三塁打 (3B)</td>
-              <td class="mono">{fmtRate(rates.triple)}</td>
-              <td class="mono">{player.triple}</td>
+              <td class="td-numeric">{fmtRate(rates.triple)}</td>
+              <td class="td-numeric">{player.triple}</td>
             </tr>
             <tr>
               <td>本塁打 (HR)</td>
-              <td class="mono">{fmtRate(rates.hr)}</td>
-              <td class="mono">{player.hr}</td>
+              <td class="td-numeric">{fmtRate(rates.hr)}</td>
+              <td class="td-numeric">{player.hr}</td>
             </tr>
           </tbody>
         </table>
 
         <h3 class="section-title">その他</h3>
-        <table class="rates-table">
+        <table class="table table-compact rates-table">
           <thead>
             <tr>
               <th>項目</th>
@@ -96,18 +96,18 @@
           <tbody>
             <tr>
               <td>三振 (K)</td>
-              <td class="mono">{fmtRate(rates.k)}</td>
-              <td class="mono">{player.so}</td>
+              <td class="td-numeric">{fmtRate(rates.k)}</td>
+              <td class="td-numeric">{player.so}</td>
             </tr>
             <tr>
               <td>四死球 (BB+HBP)</td>
-              <td class="mono">{fmtRate(rates.bb_hbp)}</td>
-              <td class="mono">{player.bb + player.hbp}</td>
+              <td class="td-numeric">{fmtRate(rates.bb_hbp)}</td>
+              <td class="td-numeric">{player.bb + player.hbp}</td>
             </tr>
             <tr>
               <td>アウト (OUT)</td>
-              <td class="mono">{fmtRate(rates.out)}</td>
-              <td class="mono">{rawOut}</td>
+              <td class="td-numeric">{fmtRate(rates.out)}</td>
+              <td class="td-numeric">{rawOut}</td>
             </tr>
           </tbody>
         </table>
@@ -130,8 +130,8 @@
   }
 
   .modal-content {
-    background: #fff;
-    border-radius: 8px;
+    background: var(--color-bg);
+    border-radius: var(--radius-lg);
     width: 90%;
     max-width: 420px;
     max-height: 85vh;
@@ -144,7 +144,7 @@
     align-items: center;
     justify-content: space-between;
     padding: 0.75rem 1rem;
-    border-bottom: 1px solid #e5e7eb;
+    border-bottom: 1px solid var(--color-border-light);
   }
 
   .modal-title {
@@ -159,12 +159,12 @@
     font-size: 1.5rem;
     line-height: 1;
     cursor: pointer;
-    color: #6b7280;
+    color: var(--color-text-secondary);
     padding: 0 0.25rem;
   }
 
   .close-btn:hover {
-    color: #111827;
+    color: var(--color-text);
   }
 
   .modal-body {
@@ -179,45 +179,26 @@
   }
 
   .info-label {
-    color: #6b7280;
+    color: var(--color-text-secondary);
     font-weight: 600;
   }
 
   .info-value {
-    color: #111827;
+    color: var(--color-text);
   }
 
   .section-title {
     margin: 0.75rem 0 0.3rem;
     font-size: 0.85rem;
     font-weight: 700;
-    color: #374151;
-    border-bottom: 1px solid #e5e7eb;
+    color: var(--color-neutral-700);
+    border-bottom: 1px solid var(--color-border-light);
     padding-bottom: 0.2rem;
-  }
-
-  .rates-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.8rem;
   }
 
   .rates-table th {
     text-align: left;
-    color: #6b7280;
-    font-weight: 600;
-    padding: 0.2rem 0.4rem;
-    border-bottom: 1px solid #e5e7eb;
-  }
-
-  .rates-table td {
-    padding: 0.25rem 0.4rem;
-    border-bottom: 1px solid #f3f4f6;
-  }
-
-  .rates-table .mono {
-    font-family: monospace;
-    text-align: right;
+    color: var(--color-text-secondary);
   }
 
   .rates-table th:nth-child(2),
@@ -226,7 +207,7 @@
   }
 
   .no-data {
-    color: #6b7280;
+    color: var(--color-text-secondary);
     font-size: 0.85rem;
     text-align: center;
     padding: 1rem 0;
