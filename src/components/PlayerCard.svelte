@@ -35,10 +35,7 @@
       <span class="player-name">{player.name}</span>
       <span class="player-team">{player.team}</span>
     </div>
-    <div class="card-actions">
-      <button class="detail-btn" type="button" on:click={handleShowDetails}>詳細</button>
-      <button class="add-btn" type="button" on:click={handleAdd}>追加</button>
-    </div>
+    <button class="detail-link" type="button" on:click={handleShowDetails}>詳細</button>
   </div>
 
   <div class="card-stats">
@@ -61,6 +58,10 @@
       </span>
     {/if}
   </div>
+
+  <div class="card-footer">
+    <button class="add-btn" type="button" on:click={handleAdd}>追加</button>
+  </div>
 </div>
 
 {#if showDetails}
@@ -71,11 +72,17 @@
   .player-card {
     border: 1px solid var(--color-border);
     border-radius: var(--radius-md);
-    padding: 0.4rem 0.5rem;
+    padding: var(--space-sm);
     background: var(--color-bg-surface);
     display: flex;
     flex-direction: column;
     gap: var(--space-xs);
+    transition: box-shadow var(--transition-fast), transform var(--transition-fast);
+  }
+
+  .player-card:hover {
+    box-shadow: var(--shadow-sm);
+    transform: translateY(-1px);
   }
 
   .card-header {
@@ -135,37 +142,41 @@
     font-size: var(--font-xs);
   }
 
-  .card-actions {
+  .card-footer {
     display: flex;
-    gap: var(--space-xs);
-    flex-shrink: 0;
+    justify-content: flex-end;
+    padding-top: var(--space-xs);
+    border-top: 1px solid var(--color-border-light);
   }
 
-  .detail-btn {
-    padding: 0.15rem 0.5rem;
-    border: 1px solid var(--color-neutral-400);
-    border-radius: var(--radius-sm);
-    background: var(--color-bg-surface);
-    color: var(--color-neutral-700);
+  .detail-link {
+    padding: 0;
+    border: none;
+    background: none;
+    color: var(--color-primary-500);
     cursor: pointer;
     font-size: var(--font-xs);
-    transition: background-color var(--transition-fast);
+    text-decoration: underline;
+    flex-shrink: 0;
+    transition: color var(--transition-fast);
   }
 
-  .detail-btn:hover {
-    background: var(--color-neutral-100);
+  .detail-link:hover {
+    color: var(--color-primary-600);
   }
 
   .add-btn {
-    padding: 0.15rem 0.5rem;
+    min-height: 32px;
+    padding: var(--space-xs) var(--space-md);
     border: 1px solid var(--color-primary-500);
     border-radius: var(--radius-sm);
     background: var(--color-primary-500);
     color: #fff;
     cursor: pointer;
-    font-size: var(--font-xs);
+    font-size: var(--font-sm);
     transition: background-color var(--transition-fast);
     flex-shrink: 0;
+    width: 100%;
   }
 
   .add-btn:hover {
