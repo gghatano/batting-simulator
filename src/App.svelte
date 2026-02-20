@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { playersStore, playersLoading, playersError, loadPlayers } from './stores/players';
+  import LineupPanel from './components/LineupPanel.svelte';
 
   onMount(() => {
     loadPlayers();
@@ -16,6 +17,7 @@
     <p class="error">Error: {$playersError}</p>
   {:else}
     <p>{$playersStore.length} players loaded.</p>
+    <LineupPanel />
   {/if}
 </main>
 
