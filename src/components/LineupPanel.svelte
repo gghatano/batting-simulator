@@ -1,9 +1,21 @@
 <script lang="ts">
-  import { lineupStore, selectedSlotStore, clearAll } from '../stores/lineup';
+  import { lineupStore, selectedSlotStore, clearAll, clearSlot, swapSlots } from '../stores/lineup';
   import LineupSlot from './LineupSlot.svelte';
 
   function handleSlotClick(index: number): void {
     selectedSlotStore.set(index);
+  }
+
+  function handleClear(e: CustomEvent<number>): void {
+    clearSlot(e.detail);
+  }
+
+  function handleMoveUp(e: CustomEvent<number>): void {
+    swapSlots(e.detail, e.detail - 1);
+  }
+
+  function handleMoveDown(e: CustomEvent<number>): void {
+    swapSlots(e.detail, e.detail + 1);
   }
 </script>
 
@@ -17,6 +29,9 @@
         {slot}
         selected={$selectedSlotStore === i}
         on:click={() => handleSlotClick(i)}
+        on:clear={handleClear}
+        on:moveUp={handleMoveUp}
+        on:moveDown={handleMoveDown}
       />
     {/each}
   </div>
