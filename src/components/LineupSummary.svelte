@@ -34,18 +34,19 @@
 <style>
   .lineup-summary {
     position: sticky;
-    top: 1rem;
+    top: var(--space-lg);
     min-width: 200px;
     max-width: 260px;
-    padding: 1rem;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    background: #fafafa;
+    padding: var(--space-lg);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-lg);
+    background: var(--color-bg-muted);
   }
 
   h3 {
-    margin: 0 0 0.75rem;
-    font-size: 1rem;
+    margin: 0 0 var(--space-md);
+    font-size: var(--font-lg);
+    color: var(--color-text);
   }
 
   .lineup-list {
@@ -61,11 +62,11 @@
     display: flex;
     align-items: center;
     gap: 0.4rem;
-    font-size: 0.9rem;
-    padding: 0.25rem 0.4rem;
-    border-radius: 4px;
-    background: #fff;
-    border: 1px solid #eee;
+    font-size: var(--font-base);
+    padding: var(--space-xs) 0.4rem;
+    border-radius: var(--radius-sm);
+    background: var(--color-bg-surface);
+    border: 1px solid var(--color-border-light);
   }
 
   .lineup-list li.empty {
@@ -76,6 +77,7 @@
     font-weight: bold;
     min-width: 1.5em;
     text-align: right;
+    color: var(--color-primary-500);
   }
 
   .player-name {
@@ -83,34 +85,35 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    color: var(--color-text);
   }
 
   .player-team {
-    color: #888;
-    font-size: 0.8rem;
+    color: var(--color-text-muted);
+    font-size: var(--font-sm);
     white-space: nowrap;
   }
 
   .empty-label {
-    color: #bbb;
+    color: var(--color-neutral-300);
   }
 
   .back-btn {
     display: block;
     width: 100%;
-    margin-top: 1rem;
-    padding: 0.5rem 0.75rem;
-    font-size: 0.9rem;
-    border: 1px solid #2563eb;
-    border-radius: 6px;
-    background: #fff;
-    color: #2563eb;
+    margin-top: var(--space-lg);
+    padding: var(--space-sm) var(--space-md);
+    font-size: var(--font-base);
+    border: 1px solid var(--color-primary-500);
+    border-radius: var(--radius-md);
+    background: var(--color-bg-surface);
+    color: var(--color-primary-500);
     cursor: pointer;
-    transition: background-color 0.15s, color 0.15s;
+    transition: background-color var(--transition-fast), color var(--transition-fast);
   }
 
   .back-btn:hover {
-    background: #2563eb;
+    background: var(--color-primary-500);
     color: #fff;
   }
 </style>

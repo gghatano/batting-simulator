@@ -68,12 +68,12 @@
   }
 
   th, td {
-    border: 1px solid #ccc;
+    border: 1px solid var(--color-border);
     padding: 0.35rem 0.6rem;
   }
 
   th {
-    background: #f8f8f8;
+    background: var(--color-bg-muted);
     text-align: center;
     white-space: nowrap;
   }
@@ -89,6 +89,6 @@
 
   .empty {
     text-align: center;
-    color: #999;
+    color: var(--color-text-muted);
   }
 </style>

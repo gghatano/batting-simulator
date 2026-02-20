@@ -133,33 +133,33 @@
 
 <style>
   .summary-panel {
-    background: #f7f9fc;
-    border: 1px solid #d0d7de;
-    border-radius: 8px;
-    padding: 1rem;
-    margin-bottom: 1.5rem;
+    background: var(--color-bg-muted);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg);
+    margin-bottom: var(--space-xl);
   }
 
   .summary-panel h3 {
-    margin: 0 0 0.75rem 0;
-    font-size: 1rem;
-    color: #333;
+    margin: 0 0 var(--space-md) 0;
+    font-size: var(--font-lg);
+    color: var(--color-text);
   }
 
   .loading {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 0;
-    color: #555;
+    gap: var(--space-sm);
+    padding: var(--space-sm) 0;
+    color: var(--color-text-secondary);
   }
 
   .spinner {
     display: inline-block;
     width: 1rem;
     height: 1rem;
-    border: 2px solid #ccc;
-    border-top-color: #333;
+    border: 2px solid var(--color-border);
+    border-top-color: var(--color-primary-500);
     border-radius: 50%;
     animation: spin 0.6s linear infinite;
   }
@@ -178,16 +178,16 @@
 
   .stats-table th,
   .stats-table td {
-    border: 1px solid #d0d7de;
+    border: 1px solid var(--color-border);
     padding: 0.35rem 0.75rem;
     text-align: left;
   }
 
   .stats-table th {
-    background: #eef1f5;
+    background: var(--color-bg-muted);
     width: 20%;
     font-weight: 600;
-    font-size: 0.9rem;
+    font-size: var(--font-base);
   }
 
   .stats-table td {
@@ -202,25 +202,25 @@
 
   details summary {
     cursor: pointer;
-    font-size: 0.9rem;
-    color: #555;
+    font-size: var(--font-base);
+    color: var(--color-text-secondary);
   }
 
   .distribution-table {
     border-collapse: collapse;
     width: 100%;
-    margin-top: 0.5rem;
+    margin-top: var(--space-sm);
   }
 
   .distribution-table th,
   .distribution-table td {
-    border: 1px solid #d0d7de;
-    padding: 0.25rem 0.5rem;
-    font-size: 0.85rem;
+    border: 1px solid var(--color-border);
+    padding: var(--space-xs) var(--space-sm);
+    font-size: var(--font-sm);
   }
 
   .distribution-table thead th {
-    background: #eef1f5;
+    background: var(--color-bg-muted);
     text-align: center;
   }
 
@@ -230,8 +230,8 @@
   }
 
   .hint {
-    color: #888;
-    font-size: 0.9rem;
+    color: var(--color-text-muted);
+    font-size: var(--font-base);
     margin: 0;
   }
 </style>

@@ -1,23 +1,31 @@
 /* ==========================================================
  * Design Tokens — CSS Custom Properties
  * Task 201: 全コンポーネント共通のデザイントークン定義
+ * Task 204: カラースキーム確定 — ダークネイビー + ゴールドアクセント
  * ========================================================== */
 
 :root {
   /* --------------------------------------------------
-   * Colors — Primary (blue)
+   * Colors — Primary (dark navy: #1e3a5f)
    * -------------------------------------------------- */
-  --color-primary-50: #eff6ff;
-  --color-primary-100: #dbeafe;
-  --color-primary-200: #bfdbfe;
-  --color-primary-300: #93c5fd;
-  --color-primary-400: #60a5fa;
-  --color-primary-500: #3b82f6;
-  --color-primary-600: #2563eb;
-  --color-primary-700: #1d4ed8;
+  --color-primary-50: #e8edf4;
+  --color-primary-100: #b8c8dc;
+  --color-primary-200: #8eaac8;
+  --color-primary-300: #6889af;
+  --color-primary-400: #3d6590;
+  --color-primary-500: #1e3a5f;
+  --color-primary-600: #152c49;
+  --color-primary-700: #0d1e33;
 
   /* --------------------------------------------------
-   * Colors — Danger (red)
+   * Colors — Accent (gold: #d4a843)
+   * -------------------------------------------------- */
+  --color-accent: #d4a843;
+  --color-accent-light: #e6c96e;
+  --color-accent-dark: #b8912e;
+
+  /* --------------------------------------------------
+   * Colors — Danger (red: #dc2626 base)
    * -------------------------------------------------- */
   --color-danger-50: #fef2f2;
   --color-danger-100: #fee2e2;
@@ -45,14 +53,14 @@
   /* --------------------------------------------------
    * Colors — Background
    * -------------------------------------------------- */
-  --color-bg: #ffffff;
-  --color-bg-surface: #f9fafb;
-  --color-bg-muted: #f3f4f6;
+  --color-bg: #f5f6f8;
+  --color-bg-surface: #ffffff;
+  --color-bg-muted: #eef1f5;
 
   /* --------------------------------------------------
    * Colors — Text
    * -------------------------------------------------- */
-  --color-text: #111827;
+  --color-text: #0d1e33;
   --color-text-secondary: #4b5563;
   --color-text-muted: #9ca3af;
 

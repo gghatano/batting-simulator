@@ -65,58 +65,60 @@
   .lineup-panel {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: var(--space-sm);
     min-width: 220px;
   }
 
   h2 {
-    margin: 0 0 0.25rem;
-    font-size: 1.1rem;
+    margin: 0 0 var(--space-xs);
+    font-size: var(--font-lg);
+    color: var(--color-text);
   }
 
   .slots {
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
+    gap: var(--space-xs);
   }
 
   .clear-all-btn {
-    margin-top: 0.5rem;
+    margin-top: var(--space-sm);
     padding: 0.4rem 0.75rem;
-    border: 1px solid #dc2626;
-    border-radius: 4px;
-    background: #fff;
-    color: #dc2626;
+    border: 1px solid var(--color-danger-600);
+    border-radius: var(--radius-sm);
+    background: var(--color-bg-surface);
+    color: var(--color-danger-600);
     cursor: pointer;
-    font-size: 0.85rem;
-    transition: background-color 0.15s, color 0.15s;
+    font-size: var(--font-sm);
+    transition: background-color var(--transition-fast), color var(--transition-fast);
   }
 
   .clear-all-btn:hover {
-    background: #dc2626;
+    background: var(--color-danger-600);
     color: #fff;
   }
 
   .start-sim-btn {
-    margin-top: 0.25rem;
-    padding: 0.5rem 0.75rem;
-    border: 1px solid #2563eb;
-    border-radius: 4px;
-    background: #2563eb;
-    color: #fff;
+    margin-top: var(--space-xs);
+    padding: var(--space-sm) var(--space-md);
+    border: 1px solid var(--color-accent-dark);
+    border-radius: var(--radius-sm);
+    background: var(--color-accent);
+    color: var(--color-primary-700);
     cursor: pointer;
-    font-size: 0.85rem;
+    font-size: var(--font-sm);
     font-weight: bold;
-    transition: background-color 0.15s;
+    transition: background-color var(--transition-fast);
   }
 
   .start-sim-btn:hover {
-    background: #1d4ed8;
+    background: var(--color-accent-dark);
+    color: #fff;
   }
 
   .error-message {
-    margin: 0.25rem 0 0;
-    color: #dc2626;
-    font-size: 0.8rem;
+    margin: var(--space-xs) 0 0;
+    color: var(--color-danger-600);
+    font-size: var(--font-sm);
   }
 </style>

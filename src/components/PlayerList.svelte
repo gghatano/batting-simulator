@@ -92,15 +92,15 @@
   .filter-label {
     font-size: 0.75rem;
     font-weight: 600;
-    color: #4b5563;
+    color: var(--color-text-secondary);
   }
 
   .filters select,
   .filters input {
     padding: 0.35rem 0.5rem;
-    border: 1px solid #d1d5db;
-    border-radius: 4px;
-    font-size: 0.85rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-sm);
   }
 
   .filters input {
@@ -116,9 +116,9 @@
   }
 
   .no-results {
-    color: #6b7280;
+    color: var(--color-text-muted);
     font-style: italic;
     text-align: center;
-    padding: 1rem;
+    padding: var(--space-lg);
   }
 </style>
