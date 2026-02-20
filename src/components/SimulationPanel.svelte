@@ -52,6 +52,21 @@
   }
 
   $: result = $simResultStore;
+
+  // Derive distribution rows from result
+  $: distributionRows = result
+    ? result.distribution.map((count, score) => ({
+        score,
+        count,
+        pct: result!.distribution.reduce((a, b) => a + b, 0) > 0
+          ? (count / result!.distribution.reduce((a, b) => a + b, 0)) * 100
+          : 0,
+      }))
+    : [];
+
+  $: totalTrials = result
+    ? result.distribution.reduce((a, b) => a + b, 0)
+    : 0;
 </script>
 
 <div class="simulation-panel">
@@ -124,6 +139,33 @@
             <td>{result.p90.toFixed(2)}</td>
           </tr>
         </tbody>
+      </table>
+
+      <h2>得点分布</h2>
+      <table class="distribution-table">
+        <thead>
+          <tr>
+            <th>得点</th>
+            <th>出現回数</th>
+            <th>出現率 (%)</th>
+          </tr>
+        </thead>
+        <tbody>
+          {#each distributionRows as row}
+            <tr>
+              <td class="num">{row.score}</td>
+              <td class="num">{row.count}</td>
+              <td class="num">{row.pct.toFixed(2)}</td>
+            </tr>
+          {/each}
+        </tbody>
+        <tfoot>
+          <tr>
+            <th>合計</th>
+            <td class="num">{totalTrials}</td>
+            <td class="num">{distributionRows.reduce((a, r) => a + r.pct, 0).toFixed(2)}</td>
+          </tr>
+        </tfoot>
       </table>
     </div>
   {/if}
@@ -203,5 +245,30 @@
   .results th {
     background: #f8f8f8;
     width: 50%;
+  }
+
+  .distribution-table {
+    margin-top: 0.5rem;
+  }
+
+  .distribution-table th,
+  .distribution-table td {
+    border: 1px solid #ccc;
+    padding: 0.35rem 0.75rem;
+  }
+
+  .distribution-table thead th {
+    background: #f8f8f8;
+    text-align: center;
+  }
+
+  .distribution-table tfoot th,
+  .distribution-table tfoot td {
+    background: #f0f0f0;
+    font-weight: bold;
+  }
+
+  .distribution-table .num {
+    text-align: right;
   }
 </style>
