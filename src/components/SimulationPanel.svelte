@@ -176,7 +176,7 @@
 
 <style>
   .simulation-panel {
-    max-width: 600px;
+    max-width: 700px;
   }
 
   .config-row {

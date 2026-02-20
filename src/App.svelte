@@ -3,6 +3,7 @@
   import { playersStore, playersLoading, playersError, loadPlayers } from './stores/players';
   import { activeTab } from './stores/ui';
   import LineupPanel from './components/LineupPanel.svelte';
+  import LineupSummary from './components/LineupSummary.svelte';
   import PlayerList from './components/PlayerList.svelte';
   import SimulationPanel from './components/SimulationPanel.svelte';
 
@@ -44,7 +45,10 @@
         <LineupPanel />
       </div>
     {:else}
-      <SimulationPanel />
+      <div class="sim-layout">
+        <SimulationPanel />
+        <LineupSummary />
+      </div>
     {/if}
   {/if}
 </main>
@@ -66,6 +70,21 @@
   }
 
   .layout > :global(:last-child) {
+    flex-shrink: 0;
+  }
+
+  .sim-layout {
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-start;
+  }
+
+  .sim-layout > :global(:first-child) {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .sim-layout > :global(:last-child) {
     flex-shrink: 0;
   }
 
