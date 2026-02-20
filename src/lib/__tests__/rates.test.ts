@@ -8,6 +8,7 @@ function makePlayer(stats: Partial<Player> & { pa: number }): Player {
     id: 1,
     name: "Test Player",
     team: "Test Team",
+    position: "投",
     single: 0,
     double: 0,
     triple: 0,

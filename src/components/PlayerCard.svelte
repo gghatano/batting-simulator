@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Player } from '../lib/models';
+  import type { Player, Position } from '../lib/models';
   import { addPlayerToSelectedSlot } from '../stores/lineup';
   import PlayerDetailsModal from './PlayerDetailsModal.svelte';
 
@@ -25,16 +25,31 @@
     return value.toFixed(3).replace(/^0/, '');
   }
 
+  /** Map a position to its CSS color class name */
+  function positionClass(pos: Position): string {
+    switch (pos) {
+      case '投': return 'pos-pitcher';
+      case '捕': return 'pos-catcher';
+      case '一': case '二': case '三': case '遊': return 'pos-infield';
+      case '左': case '中': case '右': return 'pos-outfield';
+      case '指': return 'pos-dh';
+      default: return '';
+    }
+  }
+
   $: avg = player.pa > 0
     ? (player.single + player.double + player.triple + player.hr) / player.pa
     : 0;
 
   $: hrRate = player.pa > 0 ? player.hr / player.pa : 0;
+
+  $: posClass = positionClass(player.position);
 </script>
 
-<div class="player-card">
+<div class="player-card {posClass}">
   <div class="card-header">
     <div class="card-title">
+      <span class="pos-badge {posClass}">{player.position}</span>
       <span class="player-name">{player.name}</span>
       <span class="player-team">{player.team}</span>
     </div>
@@ -70,11 +85,34 @@
     flex-direction: column;
     gap: 0.15rem;
     transition: box-shadow var(--transition-fast), transform var(--transition-fast);
+    border-left: 3px solid transparent;
   }
 
   .player-card:hover {
     box-shadow: var(--shadow-sm);
     transform: translateY(-1px);
+  }
+
+  /* Position-based card background and left border */
+  .player-card.pos-pitcher {
+    background: var(--color-pos-pitcher-bg);
+    border-left-color: var(--color-pos-pitcher-accent);
+  }
+  .player-card.pos-catcher {
+    background: var(--color-pos-catcher-bg);
+    border-left-color: var(--color-pos-catcher-accent);
+  }
+  .player-card.pos-infield {
+    background: var(--color-pos-infield-bg);
+    border-left-color: var(--color-pos-infield-accent);
+  }
+  .player-card.pos-outfield {
+    background: var(--color-pos-outfield-bg);
+    border-left-color: var(--color-pos-outfield-accent);
+  }
+  .player-card.pos-dh {
+    background: var(--color-pos-dh-bg);
+    border-left-color: var(--color-pos-dh-accent);
   }
 
   .card-header {
@@ -89,6 +127,36 @@
     align-items: baseline;
     gap: 0.3rem;
     min-width: 0;
+  }
+
+  /* Position badge — small chip with 1 character */
+  .pos-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 1.3em;
+    height: 1.3em;
+    font-size: var(--font-xs);
+    font-weight: 700;
+    line-height: 1;
+    border-radius: var(--radius-sm);
+    color: #fff;
+    flex-shrink: 0;
+  }
+  .pos-badge.pos-pitcher {
+    background: var(--color-pos-pitcher-accent);
+  }
+  .pos-badge.pos-catcher {
+    background: var(--color-pos-catcher-accent);
+  }
+  .pos-badge.pos-infield {
+    background: var(--color-pos-infield-accent);
+  }
+  .pos-badge.pos-outfield {
+    background: var(--color-pos-outfield-accent);
+  }
+  .pos-badge.pos-dh {
+    background: var(--color-pos-dh-accent);
   }
 
   .player-name {

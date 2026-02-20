@@ -23,6 +23,7 @@ const mkPlayer = (overrides: Partial<Player> & { id: number; name: string; team:
   bb: 50,
   hbp: 5,
   so: 80,
+  position: '遊',
   ...overrides,
 });
 
@@ -40,7 +41,7 @@ const allPlayers: Player[] = [playerA, playerB, playerC, playerD, playerE];
 
 function resetStores(): void {
   playersStore.set(allPlayers);
-  filtersStore.set({ team: '', query: '', sort: 'pa' });
+  filtersStore.set({ team: '', position: '', query: '', sort: 'pa' });
 }
 
 // ---------------------------------------------------------------------------
@@ -164,14 +165,14 @@ describe('filteredPlayersStore', () => {
   describe('combined filters', () => {
     it('applies team + query + sort together', () => {
       // Filter to チームA, search for 田, sort by PA desc
-      filtersStore.set({ team: 'チームA', query: '田', sort: 'pa' });
+      filtersStore.set({ team: 'チームA', position: '', query: '田', sort: 'pa' });
       const result = get(filteredPlayersStore);
       expect(result).toHaveLength(1);
       expect(result[0].id).toBe(1); // 田中 太郎
     });
 
     it('team + sort: filters team then sorts', () => {
-      filtersStore.set({ team: 'チームB', query: '', sort: 'hr_per_pa' });
+      filtersStore.set({ team: 'チームB', position: '', query: '', sort: 'hr_per_pa' });
       const result = get(filteredPlayersStore);
       expect(result).toHaveLength(2);
       // playerC: 25/400=0.0625, playerD: 30/500=0.06
@@ -180,7 +181,7 @@ describe('filteredPlayersStore', () => {
     });
 
     it('query + sort: searches then sorts', () => {
-      filtersStore.set({ team: '', query: '太', sort: 'pa' });
+      filtersStore.set({ team: '', position: '', query: '太', sort: 'pa' });
       const result = get(filteredPlayersStore);
       // 田中 太郎 (pa=550), 中村 太一 (pa=450), 佐藤 健太 (pa=400)
       expect(result).toHaveLength(3);

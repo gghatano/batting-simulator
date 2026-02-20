@@ -20,6 +20,8 @@ export type SortKey = 'pa' | 'hr_per_pa' | 'ops';
 export interface Filters {
   /** Team name to filter by, or '' for all teams */
   team: string;
+  /** Position to filter by, or '' for all positions */
+  position: string;
   /** Name search query (partial match) */
   query: string;
   /** Sort key */
@@ -29,6 +31,7 @@ export interface Filters {
 /** Store holding the current filter/sort state */
 export const filtersStore = writable<Filters>({
   team: '',
+  position: '',
   query: '',
   sort: 'pa',
 });
@@ -110,6 +113,11 @@ export const filteredPlayersStore = derived(
     // --- Team filter ---
     if ($filters.team !== '') {
       result = result.filter((p) => p.team === $filters.team);
+    }
+
+    // --- Position filter ---
+    if ($filters.position !== '') {
+      result = result.filter((p) => p.position === $filters.position);
     }
 
     // --- Name search (case-insensitive partial match) ---

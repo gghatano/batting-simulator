@@ -4,6 +4,9 @@
 
 // --- Player (matches public/players.json) ---
 
+/** Valid position values (Pawapuro-style single character) */
+export type Position = '投' | '捕' | '一' | '二' | '三' | '遊' | '左' | '中' | '右' | '指';
+
 /** Raw player data as stored in players.json */
 export interface Player {
   /** Unique player identifier */
@@ -12,6 +15,8 @@ export interface Player {
   name: string;
   /** Team name */
   team: string;
+  /** Position (Pawapuro-style single character) */
+  position: Position;
   /** Plate appearances */
   pa: number;
   /** Singles */

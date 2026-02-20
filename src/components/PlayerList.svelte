@@ -13,10 +13,18 @@
     filtersStore.update((f) => ({ ...f, query: target.value }));
   }
 
+  function setPosition(e: Event): void {
+    const target = e.target as HTMLSelectElement;
+    filtersStore.update((f) => ({ ...f, position: target.value }));
+  }
+
   function setSort(e: Event): void {
     const target = e.target as HTMLSelectElement;
     filtersStore.update((f) => ({ ...f, sort: target.value as SortKey }));
   }
+
+  /** All valid positions for the filter dropdown */
+  const positions = ['投', '捕', '一', '二', '三', '遊', '左', '中', '右', '指'] as const;
 </script>
 
 <section class="player-list">
@@ -29,6 +37,16 @@
         <option value="">すべて</option>
         {#each $teamsStore as team}
           <option value={team}>{team}</option>
+        {/each}
+      </select>
+    </label>
+
+    <label class="filter-item">
+      <span class="filter-label">ポジション</span>
+      <select value={$filtersStore.position} on:change={setPosition}>
+        <option value="">すべて</option>
+        {#each positions as pos}
+          <option value={pos}>{pos}</option>
         {/each}
       </select>
     </label>
