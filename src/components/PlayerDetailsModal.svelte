@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { onMount, onDestroy } from 'svelte';
   import { fade, scale } from 'svelte/transition';
   import type { Player } from '../lib/models';
   import { calcBatterRates } from '../lib/rates';
@@ -18,9 +19,64 @@
   /** Compute raw OUT count (PA minus all known event counts) */
   $: rawOut = player.pa - (player.single + player.double + player.triple + player.hr + player.bb + player.hbp + player.so);
 
+  /** Reference to the modal backdrop element for focus management */
+  let backdropEl: HTMLDivElement;
+
+  /** The element that had focus before the modal opened */
+  let previouslyFocusedEl: HTMLElement | null = null;
+
+  onMount(() => {
+    // Remember the element that had focus before modal opened
+    previouslyFocusedEl = document.activeElement as HTMLElement | null;
+    // Focus the close button inside the modal
+    requestAnimationFrame(() => {
+      const closeBtn = backdropEl?.querySelector<HTMLElement>('.close-btn');
+      closeBtn?.focus();
+    });
+  });
+
+  onDestroy(() => {
+    // Restore focus to the previously focused element
+    previouslyFocusedEl?.focus();
+  });
+
+  /** Get all focusable elements within the modal */
+  function getFocusableElements(): HTMLElement[] {
+    if (!backdropEl) return [];
+    return Array.from(
+      backdropEl.querySelectorAll<HTMLElement>(
+        'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      )
+    );
+  }
+
   function handleKeydown(e: KeyboardEvent): void {
     if (e.key === 'Escape') {
       onClose();
+      return;
+    }
+
+    // Focus trap: cycle Tab within the modal
+    if (e.key === 'Tab') {
+      const focusable = getFocusableElements();
+      if (focusable.length === 0) return;
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+
+      if (e.shiftKey) {
+        // Shift+Tab: if on first element, wrap to last
+        if (document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        }
+      } else {
+        // Tab: if on last element, wrap to first
+        if (document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
     }
   }
 
@@ -36,16 +92,17 @@
 <!-- svelte-ignore a11y-click-events-have-key-events a11y-interactive-supports-focus -->
 <div
   class="modal-backdrop"
+  bind:this={backdropEl}
   on:click={handleBackdropClick}
   role="dialog"
   aria-modal="true"
   tabindex="-1"
-  aria-label="{player.name} の詳細"
+  aria-labelledby="modal-title"
   transition:fade={{ duration: 200 }}
 >
   <div class="modal-content" transition:scale={{ duration: 200, start: 0.95 }}>
     <div class="modal-header">
-      <h2 class="modal-title">{player.name}</h2>
+      <h2 class="modal-title" id="modal-title">{player.name}</h2>
       <button class="close-btn" type="button" on:click={onClose} aria-label="閉じる">&times;</button>
     </div>
 

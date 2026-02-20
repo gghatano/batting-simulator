@@ -29,12 +29,36 @@
     errorMessage = '';
     activeTab.set('simulation');
   }
+
+  /** Keyboard navigation for lineup slots (arrow keys) */
+  function handleSlotsKeydown(e: KeyboardEvent): void {
+    const keys = ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'];
+    if (!keys.includes(e.key)) return;
+
+    e.preventDefault();
+    const current = $selectedSlotStore;
+    let next: number;
+
+    if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+      next = current <= 0 ? 8 : current - 1;
+    } else {
+      next = current >= 8 ? 0 : current + 1;
+    }
+
+    selectedSlotStore.set(next);
+
+    // Focus the newly selected slot button
+    const container = e.currentTarget as HTMLElement;
+    const slotButtons = container.querySelectorAll<HTMLElement>('.lineup-slot');
+    slotButtons[next]?.focus();
+  }
 </script>
 
 <section class="lineup-panel">
   <h2>打線</h2>
 
-  <div class="slots">
+  <!-- svelte-ignore a11y-interactive-supports-focus -->
+  <div class="slots" role="listbox" aria-label="打順リスト" on:keydown={handleSlotsKeydown}>
     {#each $lineupStore as slot, i}
       <LineupSlot
         index={i}
@@ -57,7 +81,10 @@
   </button>
 
   {#if errorMessage}
-    <p class="error-message">{errorMessage}</p>
+    <p class="error-message" role="alert" aria-live="polite">
+      <span class="error-icon" aria-hidden="true">&#x26A0;&#xFE0F;</span>
+      {errorMessage}
+    </p>
   {/if}
 </section>
 
@@ -128,5 +155,12 @@
     margin: var(--space-xs) 0 0;
     color: var(--color-danger-600);
     font-size: var(--font-sm);
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+  }
+
+  .error-icon {
+    flex-shrink: 0;
   }
 </style>
