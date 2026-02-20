@@ -75,6 +75,13 @@ export async function loadPlayers(): Promise<void> {
   }
 }
 
+/**
+ * Directly set the players array (e.g., from CSV import).
+ */
+export function setPlayers(players: Player[]): void {
+  playersStore.set(players);
+}
+
 // ---------------------------------------------------------------------------
 // Derived stores
 // ---------------------------------------------------------------------------

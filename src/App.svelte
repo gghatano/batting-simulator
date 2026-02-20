@@ -5,6 +5,7 @@
   import LineupPanel from './components/LineupPanel.svelte';
   import LineupSummary from './components/LineupSummary.svelte';
   import PlayerList from './components/PlayerList.svelte';
+  import DataImport from './components/DataImport.svelte';
   import SimulationPanel from './components/SimulationPanel.svelte';
 
   onMount(() => {
@@ -36,7 +37,10 @@
 </script>
 
 <header class="app-header">
-  <h1 class="app-title">⚾ Batting Simulator</h1>
+  <div class="header-row">
+    <h1 class="app-title">⚾ Batting Simulator</h1>
+    <DataImport />
+  </div>
 </header>
 
 <!-- svelte-ignore a11y-interactive-supports-focus a11y-no-noninteractive-element-to-interactive-role -->
@@ -99,6 +103,13 @@
     top: 0;
     z-index: 100;
     box-shadow: var(--shadow-md);
+  }
+
+  .header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-lg);
   }
 
   .app-title {
