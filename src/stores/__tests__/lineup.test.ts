@@ -8,6 +8,8 @@ import {
   clearSlot,
   clearAll,
   swapSlots,
+  isLineupComplete,
+  lineupComplete,
 } from "../lineup";
 
 // --- Test fixtures ---
@@ -117,5 +119,67 @@ describe("selectedSlotStore", () => {
   it("can be updated to any slot index", () => {
     selectedSlotStore.set(5);
     expect(get(selectedSlotStore)).toBe(5);
+  });
+});
+
+describe("isLineupComplete", () => {
+  beforeEach(() => {
+    clearAll();
+  });
+
+  it("returns false when all slots are null", () => {
+    const lineup = get(lineupStore);
+    expect(isLineupComplete(lineup)).toBe(false);
+  });
+
+  it("returns false when some slots are null", () => {
+    for (let i = 0; i < 8; i++) {
+      setSlot(i, playerA);
+    }
+    const lineup = get(lineupStore);
+    expect(isLineupComplete(lineup)).toBe(false);
+  });
+
+  it("returns true when all 9 slots are filled", () => {
+    for (let i = 0; i < 9; i++) {
+      setSlot(i, playerA);
+    }
+    const lineup = get(lineupStore);
+    expect(isLineupComplete(lineup)).toBe(true);
+  });
+
+  it("returns false when only one slot is null", () => {
+    for (let i = 0; i < 9; i++) {
+      setSlot(i, playerA);
+    }
+    clearSlot(4);
+    const lineup = get(lineupStore);
+    expect(isLineupComplete(lineup)).toBe(false);
+  });
+});
+
+describe("lineupComplete (derived store)", () => {
+  beforeEach(() => {
+    clearAll();
+  });
+
+  it("is false when lineup is incomplete", () => {
+    expect(get(lineupComplete)).toBe(false);
+  });
+
+  it("is true when all 9 slots are filled", () => {
+    for (let i = 0; i < 9; i++) {
+      setSlot(i, playerA);
+    }
+    expect(get(lineupComplete)).toBe(true);
+  });
+
+  it("becomes false when a slot is cleared", () => {
+    for (let i = 0; i < 9; i++) {
+      setSlot(i, playerA);
+    }
+    expect(get(lineupComplete)).toBe(true);
+    clearSlot(0);
+    expect(get(lineupComplete)).toBe(false);
   });
 });

@@ -2,7 +2,7 @@
 // lineup.ts — Svelte stores for the 9-batter lineup
 // ---------------------------------------------------------------------------
 
-import { writable, get } from "svelte/store";
+import { writable, derived, get } from "svelte/store";
 import type { Player, Lineup } from "../lib/models";
 
 // --- Lineup store (9 slots, initially all null) ---
@@ -85,3 +85,15 @@ export function addPlayerToSelectedSlot(player: Player): void {
   // All slots filled — move to next slot cyclically
   selectedSlotStore.set((currentSlot + 1) % 9);
 }
+
+// --- Helpers ---
+
+/** Check whether all 9 lineup slots are filled (non-null). */
+export function isLineupComplete(lineup: Lineup): boolean {
+  return lineup.every((slot) => slot !== null);
+}
+
+/** Derived store that is true when all 9 lineup slots are filled. */
+export const lineupComplete = derived(lineupStore, (lineup) =>
+  isLineupComplete(lineup),
+);

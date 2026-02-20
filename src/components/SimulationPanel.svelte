@@ -5,6 +5,8 @@
   import { simulateN } from '../lib/sim/simulate';
   import type { Player, BatterRates } from '../lib/models';
   import StatsTable from './StatsTable.svelte';
+  import SimulationSummary from './SimulationSummary.svelte';
+  import LineupSearchPanel from './LineupSearchPanel.svelte';
 
   let n: number = 10_000;
   let seedInput: string = '';
@@ -71,6 +73,8 @@
 </script>
 
 <div class="simulation-panel">
+  <SimulationSummary />
+  <LineupSearchPanel />
   <StatsTable />
 
   <h2>シミュレーション設定</h2>
@@ -176,7 +180,7 @@
 
 <style>
   .simulation-panel {
-    max-width: 600px;
+    max-width: 700px;
   }
 
   .config-row {
