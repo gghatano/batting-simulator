@@ -1,0 +1,48 @@
+/* ==========================================================
+ * Global Reset & Base Styles
+ * Task 202: リセットCSS とアプリ全体のベーススタイル
+ * ========================================================== */
+
+/* --------------------------------------------------
+ * Box Sizing Reset
+ * -------------------------------------------------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* --------------------------------------------------
+ * Body Base Styles
+ * -------------------------------------------------- */
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, 'Segoe UI', sans-serif;
+  font-size: var(--font-base);
+  line-height: 1.7;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* --------------------------------------------------
+ * Form Elements — Font Inheritance
+ * -------------------------------------------------- */
+button,
+input,
+select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+/* --------------------------------------------------
+ * Images
+ * -------------------------------------------------- */
+img {
+  max-width: 100%;
+  display: block;
+}
