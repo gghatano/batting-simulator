@@ -108,6 +108,7 @@
   <div class="action-row">
     <button disabled={!canRun} on:click={runSimulation}>
       {#if running}
+        <span class="spinner spinner-sm"></span>
         実行中...
       {:else}
         シミュレーション実行
@@ -120,6 +121,7 @@
 
   {#if running}
     <div class="loading">
+      <div class="progress-bar-indeterminate"></div>
       <p>シミュレーション実行中... しばらくお待ちください</p>
     </div>
   {/if}
@@ -210,6 +212,9 @@
   }
 
   .action-row button {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
     padding: var(--space-sm) var(--space-xl);
     font-size: var(--font-lg);
     cursor: pointer;

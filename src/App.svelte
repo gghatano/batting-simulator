@@ -35,9 +35,20 @@
 
 <main>
   {#if $playersLoading}
-    <p>Loading players...</p>
+    <div class="loading-state">
+      <span class="spinner spinner-lg"></span>
+      <p>Loading players...</p>
+    </div>
   {:else if $playersError}
-    <p class="error">Error: {$playersError}</p>
+    <div class="alert-danger">
+      <span class="alert-icon">&#x26A0;&#xFE0F;</span>
+      <div class="alert-body">
+        <p class="alert-message">Error: {$playersError}</p>
+        <div class="alert-action">
+          <button on:click={() => loadPlayers()}>再読み込み</button>
+        </div>
+      </div>
+    </div>
   {:else}
     <p class="player-count">{$playersStore.length} players loaded.</p>
 
@@ -119,8 +130,17 @@
     margin-bottom: var(--space-md);
   }
 
-  .error {
-    color: var(--color-danger-600);
+  .loading-state {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    padding: var(--space-xl) 0;
+  }
+
+  .loading-state p {
+    margin: 0;
+    color: var(--color-text-secondary);
+    font-size: var(--font-lg);
   }
 
   .layout {
