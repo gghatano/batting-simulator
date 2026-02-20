@@ -1,9 +1,14 @@
 <script lang="ts">
   import type { Player } from '../lib/models';
   import { calcBatterRates } from '../lib/rates';
+  import { addPlayerToSelectedSlot } from '../stores/lineup';
 
   /** The player to display */
   export let player: Player;
+
+  function handleAdd(): void {
+    addPlayerToSelectedSlot(player);
+  }
 
   /** Format a rate to 3 decimal places (e.g. ".285") */
   function fmtRate(value: number): string {
@@ -76,7 +81,7 @@
   {/if}
 
   <div class="card-actions">
-    <button class="add-btn" type="button">追加</button>
+    <button class="add-btn" type="button" on:click={handleAdd}>追加</button>
   </div>
 </div>
 

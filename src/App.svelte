@@ -35,4 +35,13 @@
     gap: 1.5rem;
     align-items: flex-start;
   }
+
+  .layout > :global(:first-child) {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .layout > :global(:last-child) {
+    flex-shrink: 0;
+  }
 </style>
