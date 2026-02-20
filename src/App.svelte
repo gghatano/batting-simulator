@@ -12,32 +12,34 @@
   });
 </script>
 
-<main>
-  <h1>Batting Simulator</h1>
+<header class="app-header">
+  <h1 class="app-title">⚾ Batting Simulator</h1>
+</header>
 
+<nav class="tabs">
+  <button
+    class="tab"
+    class:active={$activeTab === 'lineup'}
+    on:click={() => activeTab.set('lineup')}
+  >
+    ⚾ 打線作成
+  </button>
+  <button
+    class="tab"
+    class:active={$activeTab === 'simulation'}
+    on:click={() => activeTab.set('simulation')}
+  >
+    📊 シミュレーション
+  </button>
+</nav>
+
+<main>
   {#if $playersLoading}
     <p>Loading players...</p>
   {:else if $playersError}
     <p class="error">Error: {$playersError}</p>
   {:else}
-    <p>{$playersStore.length} players loaded.</p>
-
-    <nav class="tabs">
-      <button
-        class="tab"
-        class:active={$activeTab === 'lineup'}
-        on:click={() => activeTab.set('lineup')}
-      >
-        打線作成
-      </button>
-      <button
-        class="tab"
-        class:active={$activeTab === 'simulation'}
-        on:click={() => activeTab.set('simulation')}
-      >
-        シミュレーション
-      </button>
-    </nav>
+    <p class="player-count">{$playersStore.length} players loaded.</p>
 
     {#if $activeTab === 'lineup'}
       <div class="layout">
@@ -54,6 +56,69 @@
 </main>
 
 <style>
+  .app-header {
+    background: var(--color-primary-700);
+    color: #ffffff;
+    padding: var(--space-md) var(--space-xl);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: var(--shadow-md);
+  }
+
+  .app-title {
+    margin: 0;
+    font-size: var(--font-2xl);
+    font-weight: 700;
+    letter-spacing: 0.02em;
+  }
+
+  .tabs {
+    display: flex;
+    gap: 0;
+    background: var(--color-bg-surface);
+    border-bottom: 2px solid var(--color-border);
+    position: sticky;
+    top: 0;
+    z-index: 99;
+    padding: 0 var(--space-xl);
+  }
+
+  .tab {
+    padding: var(--space-md) var(--space-2xl);
+    font-size: var(--font-xl);
+    border: none;
+    border-bottom: 3px solid transparent;
+    background: transparent;
+    cursor: pointer;
+    color: var(--color-text-secondary);
+    transition: background-color var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
+    margin-bottom: -2px;
+    font-weight: 500;
+  }
+
+  .tab:hover {
+    background: var(--color-primary-50);
+    color: var(--color-primary-500);
+  }
+
+  .tab.active {
+    background: var(--color-primary-50);
+    border-bottom: 3px solid var(--color-primary-500);
+    font-weight: 700;
+    color: var(--color-primary-700);
+  }
+
+  main {
+    padding: var(--space-lg) var(--space-xl);
+  }
+
+  .player-count {
+    color: var(--color-text-muted);
+    font-size: var(--font-sm);
+    margin-bottom: var(--space-md);
+  }
+
   .error {
     color: var(--color-danger-600);
   }
@@ -86,38 +151,5 @@
 
   .sim-layout > :global(:last-child) {
     flex-shrink: 0;
-  }
-
-  .tabs {
-    display: flex;
-    gap: 0;
-    margin-bottom: var(--space-lg);
-    border-bottom: 2px solid var(--color-border);
-  }
-
-  .tab {
-    padding: var(--space-sm) var(--space-xl);
-    font-size: var(--font-lg);
-    border: 2px solid var(--color-border);
-    border-bottom: none;
-    background: var(--color-bg-muted);
-    cursor: pointer;
-    border-radius: var(--radius-md) var(--radius-md) 0 0;
-    margin-bottom: -2px;
-    color: var(--color-text-secondary);
-    transition: background-color var(--transition-fast), color var(--transition-fast);
-  }
-
-  .tab:hover {
-    background: var(--color-primary-50);
-    color: var(--color-primary-500);
-  }
-
-  .tab.active {
-    background: var(--color-bg-surface);
-    border-color: var(--color-primary-500);
-    border-bottom: 2px solid var(--color-bg-surface);
-    font-weight: bold;
-    color: var(--color-primary-500);
   }
 </style>
