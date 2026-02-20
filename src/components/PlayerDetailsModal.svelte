@@ -130,21 +130,21 @@
   }
 
   .modal-content {
-    background: #fff;
-    border-radius: 8px;
+    background: var(--color-bg-surface);
+    border-radius: var(--radius-lg);
     width: 90%;
     max-width: 420px;
     max-height: 85vh;
     overflow-y: auto;
-    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.2);
+    box-shadow: var(--shadow-lg);
   }
 
   .modal-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0.75rem 1rem;
-    border-bottom: 1px solid #e5e7eb;
+    padding: var(--space-md) var(--space-lg);
+    border-bottom: 1px solid var(--color-border-light);
   }
 
   .modal-title {
@@ -159,12 +159,12 @@
     font-size: 1.5rem;
     line-height: 1;
     cursor: pointer;
-    color: #6b7280;
+    color: var(--color-text-muted);
     padding: 0 0.25rem;
   }
 
   .close-btn:hover {
-    color: #111827;
+    color: var(--color-text);
   }
 
   .modal-body {
@@ -179,20 +179,20 @@
   }
 
   .info-label {
-    color: #6b7280;
+    color: var(--color-text-secondary);
     font-weight: 600;
   }
 
   .info-value {
-    color: #111827;
+    color: var(--color-text);
   }
 
   .section-title {
     margin: 0.75rem 0 0.3rem;
-    font-size: 0.85rem;
+    font-size: var(--font-sm);
     font-weight: 700;
-    color: #374151;
-    border-bottom: 1px solid #e5e7eb;
+    color: var(--color-neutral-700);
+    border-bottom: 1px solid var(--color-border-light);
     padding-bottom: 0.2rem;
   }
 
@@ -204,15 +204,15 @@
 
   .rates-table th {
     text-align: left;
-    color: #6b7280;
+    color: var(--color-text-secondary);
     font-weight: 600;
     padding: 0.2rem 0.4rem;
-    border-bottom: 1px solid #e5e7eb;
+    border-bottom: 1px solid var(--color-border-light);
   }
 
   .rates-table td {
     padding: 0.25rem 0.4rem;
-    border-bottom: 1px solid #f3f4f6;
+    border-bottom: 1px solid var(--color-neutral-100);
   }
 
   .rates-table .mono {
@@ -226,9 +226,9 @@
   }
 
   .no-data {
-    color: #6b7280;
-    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    font-size: var(--font-sm);
     text-align: center;
-    padding: 1rem 0;
+    padding: var(--space-lg) 0;
   }
 </style>

@@ -55,12 +55,12 @@
 
 <style>
   .error {
-    color: red;
+    color: var(--color-danger-600);
   }
 
   .layout {
     display: flex;
-    gap: 1.5rem;
+    gap: var(--space-xl);
     align-items: flex-start;
   }
 
@@ -75,7 +75,7 @@
 
   .sim-layout {
     display: flex;
-    gap: 1.5rem;
+    gap: var(--space-xl);
     align-items: flex-start;
   }
 
@@ -91,24 +91,33 @@
   .tabs {
     display: flex;
     gap: 0;
-    margin-bottom: 1rem;
-    border-bottom: 2px solid #ccc;
+    margin-bottom: var(--space-lg);
+    border-bottom: 2px solid var(--color-border);
   }
 
   .tab {
-    padding: 0.5rem 1.5rem;
-    font-size: 1rem;
-    border: 2px solid #ccc;
+    padding: var(--space-sm) var(--space-xl);
+    font-size: var(--font-lg);
+    border: 2px solid var(--color-border);
     border-bottom: none;
-    background: #f0f0f0;
+    background: var(--color-bg-muted);
     cursor: pointer;
-    border-radius: 6px 6px 0 0;
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
     margin-bottom: -2px;
+    color: var(--color-text-secondary);
+    transition: background-color var(--transition-fast), color var(--transition-fast);
+  }
+
+  .tab:hover {
+    background: var(--color-primary-50);
+    color: var(--color-primary-500);
   }
 
   .tab.active {
-    background: #fff;
-    border-bottom: 2px solid #fff;
+    background: var(--color-bg-surface);
+    border-color: var(--color-primary-500);
+    border-bottom: 2px solid var(--color-bg-surface);
     font-weight: bold;
+    color: var(--color-primary-500);
   }
 </style>

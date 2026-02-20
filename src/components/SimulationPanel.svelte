@@ -201,8 +201,8 @@
   }
 
   .hint {
-    color: #888;
-    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    font-size: var(--font-sm);
   }
 
   .action-row {
@@ -210,9 +210,20 @@
   }
 
   .action-row button {
-    padding: 0.5rem 1.5rem;
-    font-size: 1rem;
+    padding: var(--space-sm) var(--space-xl);
+    font-size: var(--font-lg);
     cursor: pointer;
+    background: var(--color-accent);
+    color: var(--color-primary-700);
+    border: 1px solid var(--color-accent-dark);
+    border-radius: var(--radius-sm);
+    font-weight: bold;
+    transition: background-color var(--transition-fast);
+  }
+
+  .action-row button:hover:not(:disabled) {
+    background: var(--color-accent-dark);
+    color: #fff;
   }
 
   .action-row button:disabled {
@@ -221,16 +232,16 @@
   }
 
   .validation-msg {
-    color: #c00;
-    margin-top: 0.5rem;
-    font-size: 0.9rem;
+    color: var(--color-danger-600);
+    margin-top: var(--space-sm);
+    font-size: var(--font-base);
   }
 
   .loading {
-    padding: 1rem;
-    background: #f0f0f0;
-    border-radius: 4px;
-    margin: 1rem 0;
+    padding: var(--space-lg);
+    background: var(--color-bg-muted);
+    border-radius: var(--radius-sm);
+    margin: var(--space-lg) 0;
   }
 
   .results {
@@ -244,13 +255,13 @@
 
   .results th,
   .results td {
-    border: 1px solid #ccc;
-    padding: 0.5rem 1rem;
+    border: 1px solid var(--color-border);
+    padding: var(--space-sm) var(--space-lg);
     text-align: left;
   }
 
   .results th {
-    background: #f8f8f8;
+    background: var(--color-bg-muted);
     width: 50%;
   }
 
@@ -260,18 +271,18 @@
 
   .distribution-table th,
   .distribution-table td {
-    border: 1px solid #ccc;
+    border: 1px solid var(--color-border);
     padding: 0.35rem 0.75rem;
   }
 
   .distribution-table thead th {
-    background: #f8f8f8;
+    background: var(--color-bg-muted);
     text-align: center;
   }
 
   .distribution-table tfoot th,
   .distribution-table tfoot td {
-    background: #f0f0f0;
+    background: var(--color-neutral-200);
     font-weight: bold;
   }
 

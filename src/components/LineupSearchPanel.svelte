@@ -178,17 +178,17 @@
 
 <style>
   .search-panel {
-    background: #f7f9fc;
-    border: 1px solid #d0d7de;
-    border-radius: 8px;
-    padding: 1rem;
-    margin-bottom: 1.5rem;
+    background: var(--color-bg-muted);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg);
+    margin-bottom: var(--space-xl);
   }
 
   .search-panel h3 {
-    margin: 0 0 0.75rem 0;
-    font-size: 1rem;
-    color: #333;
+    margin: 0 0 var(--space-md) 0;
+    font-size: var(--font-lg);
+    color: var(--color-text);
   }
 
   .config-row {
@@ -210,8 +210,8 @@
   }
 
   .hint {
-    color: #888;
-    font-size: 0.8rem;
+    color: var(--color-text-muted);
+    font-size: var(--font-sm);
   }
 
   .action-row {
@@ -222,6 +222,16 @@
     padding: 0.4rem 1.2rem;
     font-size: 0.95rem;
     cursor: pointer;
+    background: var(--color-primary-500);
+    color: #fff;
+    border: 1px solid var(--color-primary-600);
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    transition: background-color var(--transition-fast);
+  }
+
+  .action-row button:hover:not(:disabled) {
+    background: var(--color-primary-600);
   }
 
   .action-row button:disabled {
@@ -232,18 +242,18 @@
   .loading {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    padding: 0.5rem 0;
-    color: #555;
-    font-size: 0.9rem;
+    gap: var(--space-sm);
+    padding: var(--space-sm) 0;
+    color: var(--color-text-secondary);
+    font-size: var(--font-base);
   }
 
   .spinner {
     display: inline-block;
     width: 1rem;
     height: 1rem;
-    border: 2px solid #ccc;
-    border-top-color: #333;
+    border: 2px solid var(--color-border);
+    border-top-color: var(--color-primary-500);
     border-radius: 50%;
     animation: spin 0.6s linear infinite;
   }
@@ -259,9 +269,9 @@
   }
 
   .results h4 {
-    margin: 1rem 0 0.5rem 0;
+    margin: var(--space-lg) 0 var(--space-sm) 0;
     font-size: 0.95rem;
-    color: #333;
+    color: var(--color-text);
   }
 
   .result-table {
@@ -272,12 +282,12 @@
 
   .result-table th,
   .result-table td {
-    border: 1px solid #d0d7de;
+    border: 1px solid var(--color-border);
     padding: 0.35rem 0.5rem;
   }
 
   .result-table thead th {
-    background: #eef1f5;
+    background: var(--color-bg-muted);
     text-align: center;
     font-weight: 600;
   }

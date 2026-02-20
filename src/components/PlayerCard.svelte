@@ -69,20 +69,20 @@
 
 <style>
   .player-card {
-    border: 1px solid #d1d5db;
-    border-radius: 6px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
     padding: 0.4rem 0.5rem;
-    background: #fff;
+    background: var(--color-bg-surface);
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
+    gap: var(--space-xs);
   }
 
   .card-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 0.25rem;
+    gap: var(--space-xs);
   }
 
   .card-title {
@@ -94,14 +94,15 @@
 
   .player-name {
     font-weight: 700;
-    font-size: 0.85rem;
+    font-size: var(--font-sm);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    color: var(--color-text);
   }
 
   .player-team {
-    color: #6b7280;
+    color: var(--color-text-muted);
     font-size: 0.7rem;
     white-space: nowrap;
   }
@@ -110,7 +111,7 @@
     display: flex;
     flex-wrap: wrap;
     gap: 0.15rem 0.5rem;
-    font-size: 0.72rem;
+    font-size: var(--font-xs);
   }
 
   .stat-item {
@@ -120,53 +121,53 @@
   }
 
   .stat-label {
-    color: #6b7280;
+    color: var(--color-text-secondary);
     font-weight: 600;
   }
 
   .stat-value {
-    color: #111827;
+    color: var(--color-text);
   }
 
   .stat-value.mono {
     font-family: monospace;
-    font-size: 0.72rem;
+    font-size: var(--font-xs);
   }
 
   .card-actions {
     display: flex;
-    gap: 0.25rem;
+    gap: var(--space-xs);
     flex-shrink: 0;
   }
 
   .detail-btn {
     padding: 0.15rem 0.5rem;
-    border: 1px solid #6b7280;
-    border-radius: 4px;
-    background: #fff;
-    color: #374151;
+    border: 1px solid var(--color-neutral-400);
+    border-radius: var(--radius-sm);
+    background: var(--color-bg-surface);
+    color: var(--color-neutral-700);
     cursor: pointer;
-    font-size: 0.72rem;
-    transition: background-color 0.15s;
+    font-size: var(--font-xs);
+    transition: background-color var(--transition-fast);
   }
 
   .detail-btn:hover {
-    background: #f3f4f6;
+    background: var(--color-neutral-100);
   }
 
   .add-btn {
     padding: 0.15rem 0.5rem;
-    border: 1px solid #3b82f6;
-    border-radius: 4px;
-    background: #3b82f6;
+    border: 1px solid var(--color-primary-500);
+    border-radius: var(--radius-sm);
+    background: var(--color-primary-500);
     color: #fff;
     cursor: pointer;
-    font-size: 0.72rem;
-    transition: background-color 0.15s;
+    font-size: var(--font-xs);
+    transition: background-color var(--transition-fast);
     flex-shrink: 0;
   }
 
   .add-btn:hover {
-    background: #2563eb;
+    background: var(--color-primary-600);
   }
 </style>

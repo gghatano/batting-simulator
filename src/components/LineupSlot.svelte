@@ -66,33 +66,33 @@
   .lineup-slot-row {
     display: flex;
     align-items: center;
-    gap: 0.25rem;
+    gap: var(--space-xs);
   }
 
   .lineup-slot {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: var(--space-sm);
     flex: 1;
-    padding: 0.5rem 0.75rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    background: #fff;
+    padding: var(--space-sm) var(--space-md);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    background: var(--color-bg-surface);
     cursor: pointer;
-    font-size: 0.9rem;
+    font-size: var(--font-base);
     text-align: left;
-    transition: background-color 0.15s, border-color 0.15s;
+    transition: background-color var(--transition-fast), border-color var(--transition-fast);
   }
 
   .lineup-slot:hover {
-    background: #f0f4ff;
-    border-color: #99b;
+    background: var(--color-primary-50);
+    border-color: var(--color-primary-300);
   }
 
   .lineup-slot.selected {
-    background: #dbeafe;
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.3);
+    background: var(--color-primary-50);
+    border-color: var(--color-primary-500);
+    box-shadow: 0 0 0 2px rgba(30, 58, 95, 0.25);
   }
 
   .order {
@@ -101,30 +101,31 @@
     justify-content: center;
     width: 1.5rem;
     height: 1.5rem;
-    border-radius: 50%;
-    background: #e5e7eb;
+    border-radius: var(--radius-full);
+    background: var(--color-neutral-200);
     font-weight: bold;
-    font-size: 0.8rem;
+    font-size: var(--font-sm);
     flex-shrink: 0;
   }
 
   .selected .order {
-    background: #3b82f6;
+    background: var(--color-primary-500);
     color: #fff;
   }
 
   .player-name {
     font-weight: 600;
+    color: var(--color-text);
   }
 
   .player-team {
-    color: #666;
-    font-size: 0.8rem;
+    color: var(--color-text-muted);
+    font-size: var(--font-sm);
     margin-left: auto;
   }
 
   .placeholder {
-    color: #999;
+    color: var(--color-text-muted);
     font-style: italic;
   }
 
@@ -141,18 +142,18 @@
     width: 1.6rem;
     height: 1.6rem;
     padding: 0;
-    border: 1px solid #ccc;
+    border: 1px solid var(--color-border);
     border-radius: 3px;
-    background: #f9fafb;
+    background: var(--color-neutral-50);
     cursor: pointer;
     font-size: 0.75rem;
     line-height: 1;
-    transition: background-color 0.15s, border-color 0.15s;
+    transition: background-color var(--transition-fast), border-color var(--transition-fast);
   }
 
   .action-btn:hover:not(:disabled) {
-    background: #e5e7eb;
-    border-color: #999;
+    background: var(--color-neutral-200);
+    border-color: var(--color-neutral-400);
   }
 
   .action-btn:disabled {
@@ -161,16 +162,16 @@
   }
 
   .clear-btn {
-    color: #dc2626;
-    border-color: #fca5a5;
+    color: var(--color-danger-600);
+    border-color: var(--color-danger-300);
   }
 
   .clear-btn:hover:not(:disabled) {
-    background: #fee2e2;
-    border-color: #dc2626;
+    background: var(--color-danger-100);
+    border-color: var(--color-danger-600);
   }
 
   .move-btn {
-    color: #374151;
+    color: var(--color-neutral-700);
   }
 </style>
