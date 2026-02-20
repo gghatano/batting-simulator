@@ -129,6 +129,7 @@
   {#if result}
     <div class="results">
       <h2>結果サマリ</h2>
+      <div class="table-scroll-wrapper">
       <table class="table result-summary-table">
         <tbody>
           <tr>
@@ -149,8 +150,10 @@
           </tr>
         </tbody>
       </table>
+      </div>
 
       <h2>得点分布</h2>
+      <div class="table-scroll-wrapper">
       <table class="table table-compact table-numeric distribution-table">
         <thead>
           <tr>
@@ -176,6 +179,7 @@
           </tr>
         </tfoot>
       </table>
+      </div>
     </div>
   {/if}
 </div>
@@ -266,5 +270,20 @@
   .distribution-table tfoot td {
     background: var(--color-bg-muted);
     font-weight: bold;
+  }
+
+  .table-scroll-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  @media (max-width: 768px) {
+    .simulation-panel {
+      max-width: 100%;
+    }
+
+    .config-row label {
+      flex-wrap: wrap;
+    }
   }
 </style>

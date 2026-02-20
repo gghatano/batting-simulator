@@ -129,4 +129,11 @@
     color: var(--color-danger-600);
     font-size: var(--font-sm);
   }
+
+  @media (max-width: 768px) {
+    .lineup-panel {
+      min-width: 0;
+      width: 100%;
+    }
+  }
 </style>

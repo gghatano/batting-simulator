@@ -120,4 +120,14 @@
     text-align: center;
     padding: var(--space-lg);
   }
+
+  @media (max-width: 768px) {
+    .cards {
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    }
+
+    .filters input {
+      min-width: 120px;
+    }
+  }
 </style>

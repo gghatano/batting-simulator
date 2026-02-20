@@ -20,6 +20,7 @@
 
 <div class="stats-table">
   <h2>打者別イベント率</h2>
+  <div class="table-scroll-wrapper">
   <table class="table table-compact table-zebra">
     <thead>
       <tr>
@@ -54,11 +55,17 @@
       {/each}
     </tbody>
   </table>
+  </div>
 </div>
 
 <style>
   .stats-table {
     margin-bottom: var(--space-xl);
+  }
+
+  .table-scroll-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
   }
 
   .center {

@@ -116,4 +116,13 @@
     background: var(--color-primary-500);
     color: var(--color-bg-surface);
   }
+
+  @media (max-width: 768px) {
+    .lineup-summary {
+      min-width: 0;
+      max-width: 100%;
+      width: 100%;
+      position: static;
+    }
+  }
 </style>

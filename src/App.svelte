@@ -172,4 +172,42 @@
   .sim-layout > :global(:last-child) {
     flex-shrink: 0;
   }
+
+  /* ---- Responsive: 768px and below ---- */
+  @media (max-width: 768px) {
+    .app-title {
+      font-size: var(--font-xl);
+    }
+
+    .tabs {
+      padding: 0 var(--space-md);
+    }
+
+    .tab {
+      padding: var(--space-sm) var(--space-lg);
+      font-size: var(--font-base);
+    }
+
+    main {
+      padding: var(--space-md) var(--space-md);
+    }
+
+    .layout {
+      flex-direction: column;
+    }
+
+    .layout > :global(:last-child) {
+      flex-shrink: 1;
+      width: 100%;
+    }
+
+    .sim-layout {
+      flex-direction: column;
+    }
+
+    .sim-layout > :global(:last-child) {
+      flex-shrink: 1;
+      width: 100%;
+    }
+  }
 </style>
