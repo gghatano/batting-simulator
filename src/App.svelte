@@ -53,12 +53,12 @@
     <p class="player-count">{$playersStore.length} players loaded.</p>
 
     {#if $activeTab === 'lineup'}
-      <div class="layout">
+      <div class="layout tab-fade-in">
         <PlayerList />
         <LineupPanel />
       </div>
     {:else}
-      <div class="sim-layout">
+      <div class="sim-layout tab-fade-in">
         <SimulationPanel />
         <LineupSummary />
       </div>
@@ -171,5 +171,21 @@
 
   .sim-layout > :global(:last-child) {
     flex-shrink: 0;
+  }
+
+  /* Tab content fade-in */
+  .tab-fade-in {
+    animation: tab-fade 0.2s ease;
+  }
+
+  @keyframes tab-fade {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tab-fade-in {
+      animation: none;
+    }
   }
 </style>
