@@ -82,10 +82,10 @@
   }
 
   .clear-all-btn {
-    margin-top: var(--space-sm);
-    padding: 0.4rem 0.75rem;
+    margin-top: var(--space-md);
+    padding: var(--space-sm) var(--space-md);
     border: 1px solid var(--color-danger-600);
-    border-radius: var(--radius-sm);
+    border-radius: var(--radius-md);
     background: var(--color-bg-surface);
     color: var(--color-danger-600);
     cursor: pointer;
@@ -95,25 +95,33 @@
 
   .clear-all-btn:hover {
     background: var(--color-danger-600);
-    color: #fff;
+    color: var(--color-bg-surface);
   }
 
   .start-sim-btn {
-    margin-top: var(--space-xs);
-    padding: var(--space-sm) var(--space-md);
-    border: 1px solid var(--color-accent-dark);
-    border-radius: var(--radius-sm);
+    margin-top: var(--space-sm);
+    padding: var(--space-md) var(--space-lg);
+    border: 2px solid var(--color-accent-dark);
+    border-radius: var(--radius-md);
     background: var(--color-accent);
     color: var(--color-primary-700);
     cursor: pointer;
-    font-size: var(--font-sm);
+    font-size: var(--font-lg);
     font-weight: bold;
-    transition: background-color var(--transition-fast);
+    box-shadow: var(--shadow-md);
+    transition: background-color var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast);
   }
 
   .start-sim-btn:hover {
     background: var(--color-accent-dark);
-    color: #fff;
+    color: var(--color-bg-surface);
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-1px);
+  }
+
+  .start-sim-btn:active {
+    transform: translateY(0);
+    box-shadow: var(--shadow-sm);
   }
 
   .error-message {

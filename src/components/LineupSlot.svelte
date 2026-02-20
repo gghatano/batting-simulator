@@ -24,6 +24,7 @@
   <button
     class="lineup-slot"
     class:selected
+    class:empty-slot={isEmpty}
     on:click
     type="button"
     aria-pressed={selected}
@@ -76,6 +77,7 @@
     flex: 1;
     padding: var(--space-sm) var(--space-md);
     border: 1px solid var(--color-border);
+    border-left: 4px solid transparent;
     border-radius: var(--radius-sm);
     background: var(--color-bg-surface);
     cursor: pointer;
@@ -87,30 +89,44 @@
   .lineup-slot:hover {
     background: var(--color-primary-50);
     border-color: var(--color-primary-300);
+    border-left-color: var(--color-primary-300);
   }
 
   .lineup-slot.selected {
-    background: var(--color-primary-50);
+    background: var(--color-primary-100);
     border-color: var(--color-primary-500);
-    box-shadow: 0 0 0 2px rgba(30, 58, 95, 0.25);
+    border-left: 4px solid var(--color-primary-500);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .lineup-slot.empty-slot {
+    border-style: dashed;
+    border-left-style: dashed;
+    background: var(--color-neutral-50);
+  }
+
+  .lineup-slot.empty-slot.selected {
+    border-left-style: solid;
+    background: var(--color-primary-50);
   }
 
   .order {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 1.5rem;
-    height: 1.5rem;
+    width: 2.5rem;
+    height: 2.5rem;
     border-radius: var(--radius-full);
-    background: var(--color-neutral-200);
+    background: var(--color-primary-500);
+    color: var(--color-bg-surface);
     font-weight: bold;
-    font-size: var(--font-sm);
+    font-size: 1.8rem;
     flex-shrink: 0;
   }
 
   .selected .order {
-    background: var(--color-primary-500);
-    color: #fff;
+    background: var(--color-primary-700);
+    color: var(--color-bg-surface);
   }
 
   .player-name {
@@ -131,7 +147,7 @@
 
   .slot-actions {
     display: flex;
-    gap: 0.15rem;
+    gap: var(--space-xs);
     flex-shrink: 0;
   }
 
@@ -139,14 +155,16 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 1.6rem;
-    height: 1.6rem;
+    min-width: 32px;
+    min-height: 32px;
+    width: 2rem;
+    height: 2rem;
     padding: 0;
     border: 1px solid var(--color-border);
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     background: var(--color-neutral-50);
     cursor: pointer;
-    font-size: 0.75rem;
+    font-size: var(--font-base);
     line-height: 1;
     transition: background-color var(--transition-fast), border-color var(--transition-fast);
   }

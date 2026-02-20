@@ -55,15 +55,15 @@
     padding: 0;
     display: flex;
     flex-direction: column;
-    gap: 0.35rem;
+    gap: var(--space-xs);
   }
 
   .lineup-list li {
     display: flex;
     align-items: center;
-    gap: 0.4rem;
+    gap: var(--space-sm);
     font-size: var(--font-base);
-    padding: var(--space-xs) 0.4rem;
+    padding: var(--space-xs) var(--space-sm);
     border-radius: var(--radius-sm);
     background: var(--color-bg-surface);
     border: 1px solid var(--color-border-light);
@@ -114,6 +114,6 @@
 
   .back-btn:hover {
     background: var(--color-primary-500);
-    color: #fff;
+    color: var(--color-bg-surface);
   }
 </style>
