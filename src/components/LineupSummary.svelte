@@ -1,9 +1,21 @@
 <script lang="ts">
   import { lineupStore } from '../stores/lineup';
   import { activeTab } from '../stores/ui';
-  import type { Player } from '../lib/models';
+  import type { Player, Position } from '../lib/models';
 
   $: lineup = $lineupStore;
+
+  /** Map a position to its CSS color class name */
+  function positionClass(pos: Position): string {
+    switch (pos) {
+      case '投': return 'pos-pitcher';
+      case '捕': return 'pos-catcher';
+      case '一': case '二': case '三': case '遊': return 'pos-infield';
+      case '左': case '中': case '右': return 'pos-outfield';
+      case '指': return 'pos-dh';
+      default: return '';
+    }
+  }
 
   function goToLineup(): void {
     activeTab.set('lineup');
@@ -28,10 +40,10 @@
 
   <ol class="lineup-list">
     {#each lineup as slot, i}
-      <li class:empty={slot === null}>
+      <li class:empty={slot === null} class="{slot ? positionClass(slot.position) : ''}">
         <span class="order">{i + 1}.</span>
         {#if slot}
-          <span class="position-badge">{slot.position}</span>
+          <span class="position-badge {positionClass(slot.position)}">{slot.position}</span>
           <span class="player-name">{slot.name}</span>
           <span class="player-stats">{fmtRate(avg(slot))} / HR{fmtRate(hrRate(slot))}</span>
         {:else}
@@ -88,6 +100,28 @@
     opacity: 0.5;
   }
 
+  /* Position-based colors for filled slots */
+  .lineup-list li:global(.pos-pitcher) {
+    background: var(--color-pos-pitcher-bg);
+    border-left: 3px solid var(--color-pos-pitcher-accent);
+  }
+  .lineup-list li:global(.pos-catcher) {
+    background: var(--color-pos-catcher-bg);
+    border-left: 3px solid var(--color-pos-catcher-accent);
+  }
+  .lineup-list li:global(.pos-infield) {
+    background: var(--color-pos-infield-bg);
+    border-left: 3px solid var(--color-pos-infield-accent);
+  }
+  .lineup-list li:global(.pos-outfield) {
+    background: var(--color-pos-outfield-bg);
+    border-left: 3px solid var(--color-pos-outfield-accent);
+  }
+  .lineup-list li:global(.pos-dh) {
+    background: var(--color-pos-dh-bg);
+    border-left: 3px solid var(--color-pos-dh-accent);
+  }
+
   .order {
     font-weight: bold;
     min-width: 1.5em;
@@ -111,12 +145,18 @@
     height: 1.4rem;
     border-radius: var(--radius-sm);
     background: var(--color-neutral-200);
-    color: var(--color-text);
+    color: #fff;
     font-size: var(--font-xs);
     font-weight: 700;
     flex-shrink: 0;
     line-height: 1;
   }
+
+  .position-badge:global(.pos-pitcher) { background: var(--color-pos-pitcher-accent); }
+  .position-badge:global(.pos-catcher) { background: var(--color-pos-catcher-accent); }
+  .position-badge:global(.pos-infield) { background: var(--color-pos-infield-accent); }
+  .position-badge:global(.pos-outfield) { background: var(--color-pos-outfield-accent); }
+  .position-badge:global(.pos-dh) { background: var(--color-pos-dh-accent); }
 
   .player-stats {
     color: var(--color-text-muted);

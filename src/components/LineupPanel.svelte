@@ -7,6 +7,10 @@
   let panelFlash = false;
   let prevComplete = false;
 
+  /** Drag & drop state */
+  let dragIndex: number | null = null;
+  let dragOverIndex: number | null = null;
+
   /** Watch lineupComplete and flash when it becomes true */
   $: {
     const nowComplete = $lineupComplete;
@@ -25,12 +29,27 @@
     clearSlot(e.detail);
   }
 
-  function handleMoveUp(e: CustomEvent<number>): void {
-    swapSlots(e.detail, e.detail - 1);
+  function handleDragStart(e: CustomEvent<number>): void {
+    dragIndex = e.detail;
   }
 
-  function handleMoveDown(e: CustomEvent<number>): void {
-    swapSlots(e.detail, e.detail + 1);
+  function handleDragOver(e: CustomEvent<number>): void {
+    if (dragIndex !== null && e.detail !== dragIndex) {
+      dragOverIndex = e.detail;
+    }
+  }
+
+  function handleDrop(e: CustomEvent<number>): void {
+    if (dragIndex !== null && e.detail !== dragIndex) {
+      swapSlots(dragIndex, e.detail);
+    }
+    dragIndex = null;
+    dragOverIndex = null;
+  }
+
+  function handleDragEnd(): void {
+    dragIndex = null;
+    dragOverIndex = null;
   }
 
   function handleStartSimulation(): void {
@@ -76,10 +95,13 @@
         index={i}
         {slot}
         selected={$selectedSlotStore === i}
+        dragOver={dragOverIndex === i}
         on:click={() => handleSlotClick(i)}
         on:clear={handleClear}
-        on:moveUp={handleMoveUp}
-        on:moveDown={handleMoveDown}
+        on:dragstart={handleDragStart}
+        on:dragover={handleDragOver}
+        on:drop={handleDrop}
+        on:dragend={handleDragEnd}
       />
     {/each}
   </div>

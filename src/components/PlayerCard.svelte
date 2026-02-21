@@ -51,7 +51,6 @@
     <div class="card-title">
       <span class="pos-badge {posClass}">{player.position}</span>
       <span class="player-name">{player.name}</span>
-      <span class="player-team">{player.team}</span>
     </div>
     <button class="detail-link" type="button" on:click={handleShowDetails}>詳細</button>
   </div>
@@ -166,12 +165,6 @@
     overflow: hidden;
     text-overflow: ellipsis;
     color: var(--color-text);
-  }
-
-  .player-team {
-    color: var(--color-text-muted);
-    font-size: var(--font-xs);
-    white-space: nowrap;
   }
 
   .card-body {
