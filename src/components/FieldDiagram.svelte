@@ -52,62 +52,114 @@
 </script>
 
 <div class="field-diagram-wrapper">
-  <svg viewBox="0 0 300 310" xmlns="http://www.w3.org/2000/svg" class="field-diagram" aria-label="守備位置図">
-    <!-- Outfield grass (large arc) -->
+  <svg viewBox="0 0 300 320" xmlns="http://www.w3.org/2000/svg" class="field-diagram" aria-label="守備位置図">
+    <defs>
+      <!-- Grass stripe pattern -->
+      <pattern id="grass-stripes" patternUnits="userSpaceOnUse" width="12" height="12" patternTransform="rotate(30)">
+        <rect width="12" height="12" fill="#4a8c3f" />
+        <rect width="12" height="6" fill="#438537" />
+      </pattern>
+      <!-- Outfield grass gradient -->
+      <radialGradient id="outfield-grad" cx="50%" cy="85%" r="80%">
+        <stop offset="0%" stop-color="#5a9c4f" />
+        <stop offset="100%" stop-color="#3d7a32" />
+      </radialGradient>
+      <!-- Dirt gradient -->
+      <radialGradient id="dirt-grad" cx="50%" cy="50%" r="60%">
+        <stop offset="0%" stop-color="#d4a872" />
+        <stop offset="100%" stop-color="#b08450" />
+      </radialGradient>
+      <!-- Shadow filter -->
+      <filter id="marker-shadow" x="-30%" y="-30%" width="160%" height="160%">
+        <feDropShadow dx="0" dy="1" stdDeviation="1.5" flood-color="#000" flood-opacity="0.3" />
+      </filter>
+    </defs>
+
+    <!-- Sky / background -->
+    <rect x="0" y="0" width="300" height="320" fill="#1a3d15" rx="8" />
+
+    <!-- Outfield grass with stripes -->
     <path
-      d="M 10,280 Q 10,10 150,10 Q 290,10 290,280 Z"
-      fill="#4a8c3f"
-      stroke="#3a7030"
-      stroke-width="2"
+      d="M 5,290 Q 5,15 150,15 Q 295,15 295,290 Z"
+      fill="url(#grass-stripes)"
     />
 
-    <!-- Infield dirt -->
+    <!-- Outfield warning track (arc) -->
     <path
-      d="M 150,120 L 230,200 L 150,275 L 70,200 Z"
-      fill="#c4956a"
-      stroke="#a07850"
-      stroke-width="1.5"
+      d="M 12,285 Q 12,22 150,22 Q 288,22 288,285"
+      fill="none"
+      stroke="#b08450"
+      stroke-width="6"
+      opacity="0.5"
     />
 
-    <!-- Infield grass (inner diamond area) -->
-    <ellipse cx="150" cy="200" rx="55" ry="45" fill="#5a9c4f" />
+    <!-- Foul lines -->
+    <line x1="150" y1="275" x2="5"   y2="50"  stroke="white" stroke-width="1.5" opacity="0.8" />
+    <line x1="150" y1="275" x2="295" y2="50"  stroke="white" stroke-width="1.5" opacity="0.8" />
+
+    <!-- Infield dirt (diamond) -->
+    <path
+      d="M 150,125 L 235,205 L 150,280 L 65,205 Z"
+      fill="url(#dirt-grad)"
+    />
+
+    <!-- Infield grass (cutout) -->
+    <ellipse cx="150" cy="205" rx="52" ry="42" fill="url(#grass-stripes)" />
+
+    <!-- Base paths (white chalk lines) -->
+    <line x1="150" y1="275" x2="232" y2="205" stroke="white" stroke-width="2.5" />
+    <line x1="232" y1="205" x2="150" y2="132" stroke="white" stroke-width="2.5" />
+    <line x1="150" y1="132" x2="68"  y2="205" stroke="white" stroke-width="2.5" />
+    <line x1="68"  y1="205" x2="150" y2="275" stroke="white" stroke-width="2.5" />
 
     <!-- Pitcher's mound -->
-    <circle cx="150" cy="205" r="8" fill="#c4956a" stroke="#a07850" stroke-width="1" />
+    <circle cx="150" cy="208" r="10" fill="#c4956a" stroke="#a07850" stroke-width="1" />
+    <rect x="146" y="206" width="8" height="3" fill="white" rx="0.5" />
 
-    <!-- Base paths (white lines) -->
-    <line x1="150" y1="270" x2="230" y2="200" stroke="white" stroke-width="2" />
-    <line x1="230" y1="200" x2="150" y2="130" stroke="white" stroke-width="2" />
-    <line x1="150" y1="130" x2="70"  y2="200" stroke="white" stroke-width="2" />
-    <line x1="70"  y1="200" x2="150" y2="270" stroke="white" stroke-width="2" />
+    <!-- Batter's boxes (left & right) -->
+    <rect x="133" y="264" width="10" height="16" fill="none" stroke="white" stroke-width="1" rx="1" />
+    <rect x="157" y="264" width="10" height="16" fill="none" stroke="white" stroke-width="1" rx="1" />
+
+    <!-- Catcher's box -->
+    <rect x="139" y="281" width="22" height="12" fill="none" stroke="white" stroke-width="1" rx="1" />
 
     <!-- Bases -->
-    <!-- Home plate -->
-    <polygon points="150,275 145,270 147,265 153,265 155,270" fill="white" />
+    <!-- Home plate (pentagon) -->
+    <polygon points="150,278 144,273 144,268 156,268 156,273" fill="white" />
     <!-- 1B -->
-    <rect x="225" y="195" width="10" height="10" fill="white" transform="rotate(45 230 200)" />
+    <rect x="228" y="201" width="8" height="8" fill="white" transform="rotate(45 232 205)" />
     <!-- 2B -->
-    <rect x="145" y="125" width="10" height="10" fill="white" transform="rotate(45 150 130)" />
+    <rect x="146" y="128" width="8" height="8" fill="white" transform="rotate(45 150 132)" />
     <!-- 3B -->
-    <rect x="65"  y="195" width="10" height="10" fill="white" transform="rotate(45 70 200)" />
+    <rect x="64"  y="201" width="8" height="8" fill="white" transform="rotate(45 68 205)" />
+
+    <!-- Coach's boxes (small rectangles along foul lines) -->
+    <rect x="58" y="240" width="8" height="14" fill="none" stroke="white" stroke-width="0.8" opacity="0.5" transform="rotate(-45 62 247)" />
+    <rect x="234" y="240" width="8" height="14" fill="none" stroke="white" stroke-width="0.8" opacity="0.5" transform="rotate(45 238 247)" />
+
+    <!-- On-deck circles -->
+    <circle cx="100" cy="290" r="5" fill="none" stroke="white" stroke-width="0.8" opacity="0.5" />
+    <circle cx="200" cy="290" r="5" fill="none" stroke="white" stroke-width="0.8" opacity="0.5" />
 
     <!-- Position markers -->
     {#each positions as p}
       {@const player = filledPositions.get(p.pos)}
-      <g class="position-marker">
+      <g class="position-marker" filter="url(#marker-shadow)">
         {#if player}
           <!-- Filled position -->
-          <circle cx={p.x} cy={p.y} r="12" fill={p.colorAccent} stroke="white" stroke-width="1.5" opacity="0.9" />
-          <text x={p.x} y={p.y + 1} text-anchor="middle" dominant-baseline="central" fill="white" font-size="10" font-weight="bold">
+          <circle cx={p.x} cy={p.y} r="13" fill={p.colorAccent} stroke="white" stroke-width="2" />
+          <text x={p.x} y={p.y + 1} text-anchor="middle" dominant-baseline="central" fill="white" font-size="10" font-weight="bold" font-family="sans-serif">
             {p.label}
           </text>
-          <text x={p.x} y={p.y + 22} text-anchor="middle" fill="white" font-size="8" font-weight="bold" stroke="#333" stroke-width="0.3">
+          <!-- Name with background pill -->
+          <rect x={p.x - 24} y={p.y + 15} width="48" height="13" rx="6.5" fill="rgba(0,0,0,0.6)" />
+          <text x={p.x} y={p.y + 23} text-anchor="middle" fill="white" font-size="8" font-weight="600" font-family="sans-serif">
             {truncName(player.name)}
           </text>
         {:else}
           <!-- Empty position -->
-          <circle cx={p.x} cy={p.y} r="12" fill="none" stroke="var(--color-neutral-400)" stroke-width="1.5" stroke-dasharray="3,2" opacity="0.7" />
-          <text x={p.x} y={p.y + 1} text-anchor="middle" dominant-baseline="central" fill="var(--color-neutral-400)" font-size="10">
+          <circle cx={p.x} cy={p.y} r="13" fill="rgba(0,0,0,0.25)" stroke="rgba(255,255,255,0.4)" stroke-width="1.5" stroke-dasharray="3,2" />
+          <text x={p.x} y={p.y + 1} text-anchor="middle" dominant-baseline="central" fill="rgba(255,255,255,0.5)" font-size="10" font-family="sans-serif">
             {p.label}
           </text>
         {/if}
@@ -134,11 +186,11 @@
   }
 
   .field-diagram {
-    width: 240px;
+    width: 250px;
     height: auto;
     border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-sm);
-    background: #2d5a27;
+    box-shadow: var(--shadow-md);
+    overflow: hidden;
   }
 
   .position-marker {
