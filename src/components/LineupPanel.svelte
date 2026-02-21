@@ -2,6 +2,7 @@
   import { lineupStore, selectedSlotStore, clearAll, clearSlot, swapSlots, lineupComplete } from '../stores/lineup';
   import { activeTab } from '../stores/ui';
   import LineupSlot from './LineupSlot.svelte';
+  import FieldDiagram from './FieldDiagram.svelte';
 
   let errorMessage = '';
   let panelFlash = false;
@@ -105,6 +106,8 @@
       />
     {/each}
   </div>
+
+  <FieldDiagram />
 
   <button class="clear-all-btn" type="button" on:click={clearAll}>
     全クリア
