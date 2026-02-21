@@ -1,5 +1,6 @@
 <script lang="ts">
   import { lineupStore } from '../stores/lineup';
+  import { quickSimMsStore } from '../stores/ui';
   import { calcBatterRates } from '../lib/rates';
   import { runSearch } from '../lib/simRunner';
   import type { Player } from '../lib/models';
@@ -26,22 +27,16 @@
   // Current lineup order as identity array [0,1,2,...,8] for diff comparison
   const currentOrder = [0, 1, 2, 3, 4, 5, 6, 7, 8];
 
-  /**
-   * Check if a candidate's order differs from the current lineup at a given position.
-   */
+  /** Check if a candidate's order differs from the current lineup at a given position. */
   function isDifferent(order: number[], pos: number): boolean {
     return order[pos] !== currentOrder[pos];
   }
 
-  /**
-   * Adopt a candidate's batting order into the lineup store.
-   * Reorders the current lineup players according to the candidate's order array.
-   */
+  /** Adopt a candidate's batting order into the lineup store. */
   function adoptOrder(order: number[]): void {
     const players = lineup as Player[];
     const reordered = order.map((idx) => players[idx]) as Lineup;
     lineupStore.set(reordered);
-    // Clear search results since the lineup has changed
     searchResult = null;
   }
 
@@ -53,6 +48,21 @@
   function clampGames(): void {
     if (gamesPerCandidate < 50) gamesPerCandidate = 50;
     if (gamesPerCandidate > 1000) gamesPerCandidate = 1000;
+  }
+
+  /** Estimated processing time based on quick sim timing */
+  $: estimatedTimeSec = (() => {
+    const msFor100 = $quickSimMsStore;
+    if (msFor100 === null) return null;
+    const totalGames = numCandidates * gamesPerCandidate;
+    return (msFor100 / 100) * totalGames / 1000;
+  })();
+
+  function formatTime(sec: number): string {
+    if (sec < 60) return `${Math.round(sec)}秒`;
+    const min = Math.floor(sec / 60);
+    const s = Math.round(sec % 60);
+    return s > 0 ? `${min}分${s}秒` : `${min}分`;
   }
 
   async function startSearch(): Promise<void> {
@@ -70,7 +80,7 @@
         numCandidates,
         gamesPerCandidate,
         seed,
-        topK: 5,
+        topK: 3,
       });
 
       searchResult = result;
@@ -80,10 +90,15 @@
       searching = false;
     }
   }
+
+  /** Truncate player name for 3x3 grid display */
+  function truncName(name: string): string {
+    return name.length > 3 ? name.slice(0, 3) : name;
+  }
 </script>
 
 <div class="search-panel">
-  <h3>打順探索</h3>
+  <h3>最適打順探索</h3>
 
   <div class="config-row">
     <label>
@@ -126,6 +141,10 @@
     </label>
   </div>
 
+  {#if estimatedTimeSec !== null}
+    <p class="time-estimate">推定処理時間: 約{formatTime(estimatedTimeSec)}</p>
+  {/if}
+
   <div class="action-row">
     <button disabled={!canSearch} on:click={startSearch}>
       {#if searching}
@@ -149,77 +168,29 @@
 
   {#if searchResult}
     <div class="results">
-      <h4>平均得点 上位5打線</h4>
-      <div class="table-wrapper">
-        <table class="table table-compact result-table">
-          <thead>
-            <tr>
-              <th class="rank-col">#</th>
-              <th>打順</th>
-              <th class="num-col">平均得点</th>
-              <th class="num-col">標準偏差</th>
-              <th class="action-col"></th>
-            </tr>
-          </thead>
-          <tbody>
-            {#each searchResult.byMean as candidate, i}
-              <tr>
-                <td class="rank">{i + 1}</td>
-                <td class="order-chips">
-                  {#each candidate.order as idx, pos}
-                    <span class="chip" class:chip-changed={isDifferent(candidate.order, pos)} class:chip-same={!isDifferent(candidate.order, pos)}>
-                      {pos + 1}.{playerNames[idx]}
-                    </span>
-                  {/each}
-                </td>
-                <td class="td-numeric">{candidate.mean.toFixed(3)}</td>
-                <td class="td-numeric">{Math.sqrt(candidate.variance).toFixed(3)}</td>
-                <td class="td-action">
-                  <button class="adopt-btn" on:click={() => adoptOrder(candidate.order)}>
-                    この打順を採用
-                  </button>
-                </td>
-              </tr>
-            {/each}
-          </tbody>
-        </table>
-      </div>
-
-      <h4>低分散（安定）上位5打線</h4>
-      <div class="table-wrapper">
-        <table class="table table-compact result-table">
-          <thead>
-            <tr>
-              <th class="rank-col">#</th>
-              <th>打順</th>
-              <th class="num-col">平均得点</th>
-              <th class="num-col">分散</th>
-              <th class="action-col"></th>
-            </tr>
-          </thead>
-          <tbody>
-            {#each searchResult.byVariance as candidate, i}
-              <tr>
-                <td class="rank">{i + 1}</td>
-                <td class="order-chips">
-                  {#each candidate.order as idx, pos}
-                    <span class="chip" class:chip-changed={isDifferent(candidate.order, pos)} class:chip-same={!isDifferent(candidate.order, pos)}>
-                      {pos + 1}.{playerNames[idx]}
-                    </span>
-                  {/each}
-                </td>
-                <td class="td-numeric">{candidate.mean.toFixed(3)}</td>
-                <td class="td-numeric">{candidate.variance.toFixed(3)}</td>
-                <td class="td-action">
-                  <button class="adopt-btn" on:click={() => adoptOrder(candidate.order)}>
-                    この打順を採用
-                  </button>
-                </td>
-              </tr>
-            {/each}
-          </tbody>
-        </table>
-      </div>
+      <h4>平均得点 上位3打線</h4>
+      {#each searchResult.byMean as candidate, i}
+        <div class="candidate-card">
+          <div class="candidate-rank">#{i + 1}</div>
+          <div class="candidate-body">
+            <div class="lineup-grid">
+              {#each candidate.order as idx, pos}
+                <div class="grid-cell" class:cell-changed={isDifferent(candidate.order, pos)}>
+                  <span class="grid-order">{pos + 1}</span>
+                  <span class="grid-name">{truncName(playerNames[idx])}</span>
+                </div>
+              {/each}
+            </div>
+            <div class="candidate-stats">
+              <span class="stat-main">{candidate.mean.toFixed(2)}点</span>
+              <span class="stat-sub">143試合: {Math.round(candidate.mean * 143)}打点</span>
+            </div>
+          </div>
+          <button class="adopt-btn" on:click={() => adoptOrder(candidate.order)}>
+            <span class="adopt-text">採用</span>
+          </button>
+        </div>
+      {/each}
     </div>
   {/if}
 </div>
@@ -260,6 +231,12 @@
   .hint {
     color: var(--color-text-muted);
     font-size: var(--font-sm);
+  }
+
+  .time-estimate {
+    margin: var(--space-sm) 0;
+    font-size: var(--font-sm);
+    color: var(--color-text-secondary);
   }
 
   .action-row {
@@ -307,73 +284,115 @@
   }
 
   .results h4 {
-    margin: var(--space-lg) 0 var(--space-sm) 0;
+    margin: 0 0 var(--space-sm) 0;
     font-size: var(--font-base);
     color: var(--color-text);
   }
 
-  .table-wrapper {
-    overflow-x: auto;
-  }
-
-  .rank-col {
-    width: 2rem;
-  }
-
-  .num-col {
-    width: 5rem;
-  }
-
-  .action-col {
-    width: 7rem;
-  }
-
-  .rank {
-    text-align: center;
-    font-weight: 600;
-  }
-
-  .order-chips {
+  /* --- Candidate card --- */
+  .candidate-card {
     display: flex;
-    flex-wrap: wrap;
-    gap: 0.25rem;
+    align-items: stretch;
+    gap: var(--space-sm);
+    background: var(--color-bg-surface);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-md);
+    padding: var(--space-sm);
+    margin-bottom: var(--space-sm);
   }
 
-  .chip {
-    display: inline-block;
-    font-size: 0.75rem;
-    padding: 0.15rem 0.4rem;
-    border-radius: var(--radius-full);
-    white-space: nowrap;
+  .candidate-rank {
+    display: flex;
+    align-items: center;
+    font-size: var(--font-lg);
+    font-weight: 700;
+    color: var(--color-primary-500);
+    min-width: 2rem;
+    justify-content: center;
+  }
+
+  .candidate-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+  }
+
+  /* --- 3x3 lineup grid --- */
+  .lineup-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2px;
+  }
+
+  .grid-cell {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    padding: 1px 4px;
+    border-radius: 3px;
+    font-size: 0.7rem;
     line-height: 1.3;
+    background: var(--color-neutral-100);
   }
 
-  .chip-same {
-    background: var(--color-neutral-200);
-    color: var(--color-text-secondary);
-  }
-
-  .chip-changed {
+  .grid-cell.cell-changed {
     background: var(--color-primary-100);
+  }
+
+  .grid-order {
+    font-weight: 700;
+    color: var(--color-text-secondary);
+    font-size: 0.65rem;
+  }
+
+  .grid-name {
+    color: var(--color-text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .cell-changed .grid-name {
     color: var(--color-primary-700);
     font-weight: 600;
   }
 
-  .td-action {
-    vertical-align: middle;
+  /* --- Stats --- */
+  .candidate-stats {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-sm);
   }
 
-  .adopt-btn {
-    padding: 0.2rem 0.5rem;
+  .stat-main {
+    font-size: var(--font-base);
+    font-weight: 700;
+    color: var(--color-text);
+  }
+
+  .stat-sub {
     font-size: var(--font-xs);
+    color: var(--color-text-muted);
+  }
+
+  /* --- Adopt button (vertical text) --- */
+  .adopt-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-xs) 6px;
     cursor: pointer;
     background: var(--color-accent);
     color: var(--color-primary-700);
     border: 1px solid var(--color-accent-dark);
     border-radius: var(--radius-sm);
-    font-weight: 600;
-    white-space: nowrap;
+    font-weight: 700;
+    font-size: var(--font-sm);
     transition: background-color var(--transition-fast);
+    writing-mode: vertical-rl;
+    letter-spacing: 0.2em;
+    min-height: 3rem;
   }
 
   .adopt-btn:hover {

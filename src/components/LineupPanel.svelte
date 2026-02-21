@@ -87,6 +87,19 @@
 </script>
 
 <section class="lineup-panel" class:panel-flash={panelFlash}>
+  <button class="start-sim-btn" class:lineup-ready={$lineupComplete} type="button" on:click={handleStartSimulation}>
+    シミュレーション開始
+  </button>
+
+  {#if errorMessage}
+    <p class="error-message" role="alert" aria-live="polite">
+      <span class="error-icon" aria-hidden="true">&#x26A0;&#xFE0F;</span>
+      {errorMessage}
+    </p>
+  {/if}
+
+  <FieldDiagram />
+
   <h2>打線</h2>
 
   <!-- svelte-ignore a11y-interactive-supports-focus -->
@@ -107,22 +120,9 @@
     {/each}
   </div>
 
-  <FieldDiagram />
-
   <button class="clear-all-btn" type="button" on:click={clearAll}>
     全クリア
   </button>
-
-  <button class="start-sim-btn" class:lineup-ready={$lineupComplete} type="button" on:click={handleStartSimulation}>
-    シミュレーション開始
-  </button>
-
-  {#if errorMessage}
-    <p class="error-message" role="alert" aria-live="polite">
-      <span class="error-icon" aria-hidden="true">&#x26A0;&#xFE0F;</span>
-      {errorMessage}
-    </p>
-  {/if}
 </section>
 
 <style>

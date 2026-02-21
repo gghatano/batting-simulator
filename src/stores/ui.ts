@@ -21,3 +21,7 @@ export const simConfigStore = writable<SimConfig>({
 // --- Simulation result ---
 
 export const simResultStore = writable<SimResult | null>(null);
+
+// --- Quick sim timing (ms per 100 games) for time estimation ---
+
+export const quickSimMsStore = writable<number | null>(null);

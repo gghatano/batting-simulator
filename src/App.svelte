@@ -249,7 +249,7 @@
       flex-direction: column;
     }
 
-    .layout > :global(:last-child) {
+.layout > :global(:last-child) {
       flex-shrink: 1;
       width: 100%;
     }

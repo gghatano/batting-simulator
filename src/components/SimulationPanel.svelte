@@ -4,7 +4,6 @@
   import { calcBatterRates } from '../lib/rates';
   import { simulateN } from '../lib/sim/simulate';
   import type { Player, BatterRates } from '../lib/models';
-  import StatsTable from './StatsTable.svelte';
   import SimulationSummary from './SimulationSummary.svelte';
   import LineupSearchPanel from './LineupSearchPanel.svelte';
 
@@ -75,7 +74,6 @@
 <div class="simulation-panel">
   <SimulationSummary />
   <LineupSearchPanel />
-  <StatsTable />
 
   <h2>シミュレーション設定</h2>
 
