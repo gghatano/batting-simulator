@@ -51,11 +51,19 @@
   --color-neutral-900: #111827;
 
   /* --------------------------------------------------
+   * Colors — Success (green)
+   * -------------------------------------------------- */
+  --color-success-50: #f0fdf4;
+  --color-success-100: #dcfce7;
+  --color-success-500: #22c55e;
+  --color-success-600: #16a34a;
+
+  /* --------------------------------------------------
    * Colors — Background
    * -------------------------------------------------- */
-  --color-bg: #f5f6f8;
+  --color-bg: #f7f8fa;
   --color-bg-surface: #ffffff;
-  --color-bg-muted: #eef1f5;
+  --color-bg-muted: #f0f2f6;
 
   /* --------------------------------------------------
    * Colors — Text
@@ -116,9 +124,10 @@
   /* --------------------------------------------------
    * Box Shadow
    * -------------------------------------------------- */
-  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.04);
+  --shadow-md: 0 2px 8px -2px rgb(0 0 0 / 0.08), 0 1px 3px -1px rgb(0 0 0 / 0.06);
+  --shadow-lg: 0 8px 20px -4px rgb(0 0 0 / 0.1), 0 3px 8px -3px rgb(0 0 0 / 0.06);
+  --shadow-card: 0 1px 3px 0 rgb(0 0 0 / 0.04), 0 1px 2px -1px rgb(0 0 0 / 0.04);
 
   /* --------------------------------------------------
    * Transition

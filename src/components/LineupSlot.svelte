@@ -136,14 +136,15 @@
     gap: var(--space-xs);
     flex: 1;
     padding: var(--space-xs) var(--space-sm);
-    border: 1px solid var(--color-border);
+    border: 1px solid var(--color-border-light);
     border-left: 4px solid transparent;
-    border-radius: var(--radius-sm);
+    border-radius: var(--radius-md);
     background: var(--color-bg-surface);
     cursor: pointer;
     font-size: var(--font-sm);
     text-align: left;
-    transition: background-color var(--transition-fast), border-color var(--transition-fast), opacity var(--transition-fast);
+    box-shadow: var(--shadow-card);
+    transition: background-color var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast);
   }
 
   .lineup-slot:hover {
@@ -154,9 +155,9 @@
 
   .lineup-slot.selected {
     background: var(--color-primary-100);
-    border-color: var(--color-primary-500);
+    border-color: var(--color-primary-300);
     border-left: 4px solid var(--color-primary-500);
-    box-shadow: var(--shadow-sm);
+    box-shadow: var(--shadow-md);
   }
 
   .lineup-slot.empty-slot {

@@ -31,13 +31,11 @@
 
     try {
       const rates = (lineup as Player[]).map(calcBatterRates);
-      const t0 = performance.now();
-      const simResult = await runSimulation(rates, 100);
-      const elapsed = performance.now() - t0;
+      const { result: simResult, elapsedMs } = await runSimulation(rates, 10_000);
       // Only apply if lineup hasn't changed during execution
       if (lastLineupKey === key) {
         result = simResult;
-        quickSimMsStore.set(elapsed);
+        quickSimMsStore.set(elapsedMs);
       }
     } catch (e) {
       console.error('Quick simulation error:', e);
@@ -82,12 +80,12 @@
 </script>
 
 <div class="summary-panel">
-  <h3>クイックサマリ (100試合)</h3>
+  <h3>クイックサマリ (10,000試合)</h3>
 
   {#if loading}
     <div class="loading">
       <span class="spinner"></span>
-      <span>100試合を実行中...</span>
+      <span>10,000試合を実行中...</span>
     </div>
   {:else if result}
     <!-- Key metrics cards -->
@@ -157,14 +155,14 @@
       </div>
     </details>
   {:else}
-    <p class="hint">打線が完成すると自動で100試合を実行します。</p>
+    <p class="hint">打線が完成すると自動で10,000試合を実行します。</p>
   {/if}
 </div>
 
 <style>
   .summary-panel {
     background: var(--color-bg-muted);
-    border: 1px solid var(--color-border);
+    border: 1px solid var(--color-border-light);
     border-radius: var(--radius-lg);
     padding: var(--space-lg);
     margin-bottom: var(--space-xl);
@@ -187,7 +185,7 @@
   /* --- Key metrics cards --- */
   .key-metrics {
     display: flex;
-    gap: var(--space-md);
+    gap: var(--space-sm);
     margin-bottom: var(--space-md);
   }
 
@@ -200,35 +198,37 @@
     border: 1px solid var(--color-border-light);
     border-radius: var(--radius-md);
     padding: var(--space-md) var(--space-lg);
-    box-shadow: var(--shadow-sm);
+    box-shadow: var(--shadow-card);
   }
 
   .metric-label {
-    font-size: var(--font-sm);
-    color: var(--color-text-secondary);
+    font-size: var(--font-xs);
+    color: var(--color-text-muted);
     margin-bottom: var(--space-xs);
   }
 
   .metric-value {
-    font-size: 2rem;
+    font-size: 1.75rem;
     font-weight: 700;
     color: var(--color-primary-500);
     line-height: 1.2;
+    font-variant-numeric: tabular-nums;
   }
 
   /* --- NPB comparison --- */
   .npb-comparison {
     text-align: center;
     margin-bottom: var(--space-md);
-    padding: var(--space-xs) var(--space-sm);
-    background: var(--color-primary-50);
-    border: 1px solid var(--color-primary-200);
-    border-radius: var(--radius-sm);
+    padding: var(--space-sm) var(--space-md);
+    background: linear-gradient(135deg, var(--color-primary-50) 0%, #edf2f8 100%);
+    border: 1px solid var(--color-primary-100);
+    border-radius: var(--radius-md);
   }
 
   .npb-label {
     font-size: var(--font-sm);
-    color: var(--color-primary-700);
+    color: var(--color-primary-600);
+    line-height: 1.5;
   }
 
   /* --- Sub-metrics --- */
@@ -294,7 +294,7 @@
 
   .bar-fill {
     height: 100%;
-    background: var(--color-primary-400);
+    background: linear-gradient(90deg, var(--color-primary-300), var(--color-primary-400));
     border-radius: var(--radius-sm);
     transition: width var(--transition-normal);
     min-width: 2px;

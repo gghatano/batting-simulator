@@ -96,13 +96,13 @@
 
 <style>
   .app-header {
-    background: var(--color-primary-700);
+    background: linear-gradient(135deg, var(--color-primary-700) 0%, var(--color-primary-600) 100%);
     color: #ffffff;
     padding: var(--space-md) var(--space-xl);
     position: sticky;
     top: 0;
     z-index: 100;
-    box-shadow: var(--shadow-md);
+    box-shadow: 0 2px 12px -2px rgb(13 30 51 / 0.3);
   }
 
   .header-row {
@@ -123,36 +123,38 @@
     display: flex;
     gap: 0;
     background: var(--color-bg-surface);
-    border-bottom: 2px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border-light);
     position: sticky;
     top: 0;
     z-index: 99;
     padding: 0 var(--space-xl);
+    box-shadow: var(--shadow-sm);
   }
 
   .tab {
     padding: var(--space-md) var(--space-2xl);
-    font-size: var(--font-xl);
+    font-size: var(--font-lg);
     border: none;
     border-bottom: 3px solid transparent;
     background: transparent;
     cursor: pointer;
-    color: var(--color-text-secondary);
+    color: var(--color-text-muted);
     transition: background-color var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
-    margin-bottom: -2px;
+    margin-bottom: -1px;
     font-weight: 500;
+    letter-spacing: 0.01em;
   }
 
   .tab:hover {
-    background: var(--color-primary-50);
     color: var(--color-primary-500);
+    background: transparent;
   }
 
   .tab.active {
-    background: var(--color-primary-50);
+    background: transparent;
     border-bottom: 3px solid var(--color-primary-500);
     font-weight: 700;
-    color: var(--color-primary-700);
+    color: var(--color-primary-600);
   }
 
   main {

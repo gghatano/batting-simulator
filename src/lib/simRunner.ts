@@ -6,9 +6,7 @@ import type { BatterRates, SimResult } from './models';
 import type { SearchConfig, SearchResult } from './sim/search';
 import type {
   SimulateJobInput,
-  SimulateJobOutput,
   SearchJobInput,
-  SearchJobOutput,
   WorkerOutput,
 } from '../workers/sim.worker';
 
@@ -22,6 +20,13 @@ function createWorker(): Worker {
   );
 }
 
+/** Result from runSimulation including timing info */
+export interface SimRunResult {
+  result: SimResult;
+  /** Pure computation time in ms (measured inside Worker) */
+  elapsedMs: number;
+}
+
 /**
  * Run a Monte Carlo simulation in a Web Worker and return the result as a Promise.
  *
@@ -31,19 +36,19 @@ function createWorker(): Worker {
  * @param lineup - Array of 9 batter rate profiles
  * @param n - Number of games to simulate
  * @param seed - Optional PRNG seed for reproducibility
- * @returns Promise resolving to the simulation result
+ * @returns Promise resolving to the simulation result with timing info
  */
 export function runSimulation(
   lineup: BatterRates[],
   n: number,
   seed?: number,
-): Promise<SimResult> {
-  return new Promise<SimResult>((resolve, reject) => {
+): Promise<SimRunResult> {
+  return new Promise<SimRunResult>((resolve, reject) => {
     const worker = createWorker();
 
     worker.onmessage = (event: MessageEvent<WorkerOutput>) => {
       if (event.data.type === 'simulate') {
-        resolve(event.data.result);
+        resolve({ result: event.data.result, elapsedMs: event.data.elapsedMs });
       } else {
         reject(new Error('Unexpected worker response type'));
       }
