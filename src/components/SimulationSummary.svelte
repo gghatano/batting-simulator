@@ -1,10 +1,11 @@
 <script lang="ts">
   import { onDestroy } from 'svelte';
   import { lineupStore } from '../stores/lineup';
-  import { activeTab } from '../stores/ui';
+  import { activeTab, quickSimMsStore } from '../stores/ui';
   import { calcBatterRates } from '../lib/rates';
   import { runSimulation } from '../lib/simRunner';
   import type { Player, SimResult } from '../lib/models';
+  import { findBracketTeams } from '../lib/npbReference';
 
   let loading = false;
   let result: SimResult | null = null;
@@ -12,7 +13,6 @@
 
   /**
    * Create a fingerprint string for the current lineup to detect changes.
-   * Returns empty string if lineup is incomplete or has PA=0 players.
    */
   function lineupFingerprint(lineup: (Player | null)[]): string {
     if (lineup.some((s) => s === null)) return '';
@@ -31,10 +31,13 @@
 
     try {
       const rates = (lineup as Player[]).map(calcBatterRates);
+      const t0 = performance.now();
       const simResult = await runSimulation(rates, 100);
+      const elapsed = performance.now() - t0;
       // Only apply if lineup hasn't changed during execution
       if (lastLineupKey === key) {
         result = simResult;
+        quickSimMsStore.set(elapsed);
       }
     } catch (e) {
       console.error('Quick simulation error:', e);
@@ -74,6 +77,8 @@
   $: maxPct = distributionRows.length > 0
     ? Math.max(...distributionRows.map((r) => r.pct))
     : 0;
+
+  $: bracket = result ? findBracketTeams(result.mean) : null;
 </script>
 
 <div class="summary-panel">
@@ -97,6 +102,29 @@
       </div>
     </div>
 
+    <!-- NPB comparison (bracket display) -->
+    {#if bracket}
+      <div class="npb-comparison">
+        {#if bracket.lower && bracket.upper && bracket.lower.rpg !== bracket.upper.rpg}
+          <span class="npb-label">
+            {bracket.lower.year}年{bracket.lower.team}（{bracket.lower.rpg.toFixed(2)}）以上、{bracket.upper.year}年{bracket.upper.team}（{bracket.upper.rpg.toFixed(2)}）以下
+          </span>
+        {:else if bracket.lower && !bracket.upper}
+          <span class="npb-label">
+            {bracket.lower.year}年{bracket.lower.team}（{bracket.lower.rpg.toFixed(2)}）以上
+          </span>
+        {:else if !bracket.lower && bracket.upper}
+          <span class="npb-label">
+            {bracket.upper.year}年{bracket.upper.team}（{bracket.upper.rpg.toFixed(2)}）以下
+          </span>
+        {:else if bracket.lower}
+          <span class="npb-label">
+            {bracket.lower.year}年{bracket.lower.team}（{bracket.lower.rpg.toFixed(2)}）と同等
+          </span>
+        {/if}
+      </div>
+    {/if}
+
     <!-- Sub-metrics -->
     <div class="sub-metrics">
       <span class="sub-metric">P10: {result.p10.toFixed(2)}</span>
@@ -108,8 +136,8 @@
       <span class="sub-metric">最大: {maxScore}</span>
     </div>
 
-    <!-- Score distribution bar chart -->
-    <details open>
+    <!-- Score distribution bar chart (collapsed by default) -->
+    <details>
       <summary>得点分布</summary>
       <div class="bar-chart">
         {#each distributionRows as row}
@@ -186,6 +214,21 @@
     font-weight: 700;
     color: var(--color-primary-500);
     line-height: 1.2;
+  }
+
+  /* --- NPB comparison --- */
+  .npb-comparison {
+    text-align: center;
+    margin-bottom: var(--space-md);
+    padding: var(--space-xs) var(--space-sm);
+    background: var(--color-primary-50);
+    border: 1px solid var(--color-primary-200);
+    border-radius: var(--radius-sm);
+  }
+
+  .npb-label {
+    font-size: var(--font-sm);
+    color: var(--color-primary-700);
   }
 
   /* --- Sub-metrics --- */

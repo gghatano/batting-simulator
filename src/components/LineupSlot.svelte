@@ -133,15 +133,15 @@
   .lineup-slot {
     display: flex;
     align-items: center;
-    gap: var(--space-sm);
+    gap: var(--space-xs);
     flex: 1;
-    padding: var(--space-sm) var(--space-md);
+    padding: var(--space-xs) var(--space-sm);
     border: 1px solid var(--color-border);
     border-left: 4px solid transparent;
     border-radius: var(--radius-sm);
     background: var(--color-bg-surface);
     cursor: pointer;
-    font-size: var(--font-base);
+    font-size: var(--font-sm);
     text-align: left;
     transition: background-color var(--transition-fast), border-color var(--transition-fast), opacity var(--transition-fast);
   }
@@ -215,8 +215,8 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 1.6rem;
-    height: 1.6rem;
+    width: 1.2rem;
+    height: 1.2rem;
     border-radius: var(--radius-sm);
     background: var(--color-neutral-200);
     color: #fff;
@@ -236,13 +236,13 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 2.5rem;
-    height: 2.5rem;
+    width: 1.5rem;
+    height: 1.5rem;
     border-radius: var(--radius-full);
     background: var(--color-primary-500);
     color: var(--color-bg-surface);
     font-weight: bold;
-    font-size: 1.8rem;
+    font-size: var(--font-sm);
     flex-shrink: 0;
   }
 
@@ -285,10 +285,10 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 32px;
-    min-height: 32px;
-    width: 2rem;
-    height: 2rem;
+    min-width: 24px;
+    min-height: 24px;
+    width: 1.5rem;
+    height: 1.5rem;
     padding: 0;
     border: 1px solid var(--color-border);
     border-radius: var(--radius-sm);
