@@ -33,6 +33,8 @@ export type WorkerInput = SimulateJobInput | SearchJobInput;
 export interface SimulateJobOutput {
   type: 'simulate';
   result: SimResult;
+  /** Pure computation time in ms (excludes Worker overhead) */
+  elapsedMs: number;
 }
 
 /** Search job output */
@@ -58,8 +60,10 @@ self.onmessage = (event: MessageEvent<WorkerInput>) => {
   switch (data.type) {
     case 'simulate': {
       const { lineup, n, seed } = data;
+      const t0 = performance.now();
       const result = simulateN(lineup, n, seed);
-      self.postMessage({ type: 'simulate', result } satisfies SimulateJobOutput);
+      const elapsedMs = performance.now() - t0;
+      self.postMessage({ type: 'simulate', result, elapsedMs } satisfies SimulateJobOutput);
       break;
     }
     case 'search': {

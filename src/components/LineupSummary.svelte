@@ -68,6 +68,7 @@
     border: 1px solid var(--color-border-light);
     border-radius: var(--radius-lg);
     background: var(--color-bg-muted);
+    box-shadow: var(--shadow-card);
   }
 
   h3 {
@@ -175,18 +176,20 @@
     width: 100%;
     margin-top: var(--space-lg);
     padding: var(--space-sm) var(--space-md);
-    font-size: var(--font-base);
-    border: 1px solid var(--color-primary-500);
+    font-size: var(--font-sm);
+    border: 1px solid var(--color-primary-300);
     border-radius: var(--radius-md);
     background: var(--color-bg-surface);
     color: var(--color-primary-500);
     cursor: pointer;
-    transition: background-color var(--transition-fast), color var(--transition-fast);
+    font-weight: 500;
+    transition: background-color var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
   }
 
   .back-btn:hover {
     background: var(--color-primary-500);
     color: var(--color-bg-surface);
+    border-color: var(--color-primary-500);
   }
 
   @media (max-width: 768px) {

@@ -76,7 +76,7 @@
 
 <style>
   .player-card {
-    border: 1px solid var(--color-border);
+    border: 1px solid var(--color-border-light);
     border-radius: var(--radius-md);
     padding: var(--space-xs) var(--space-sm);
     background: var(--color-bg-surface);
@@ -85,10 +85,11 @@
     gap: 0.15rem;
     transition: box-shadow var(--transition-fast), transform var(--transition-fast);
     border-left: 3px solid transparent;
+    box-shadow: var(--shadow-card);
   }
 
   .player-card:hover {
-    box-shadow: var(--shadow-sm);
+    box-shadow: var(--shadow-md);
     transform: translateY(-1px);
   }
 
@@ -219,22 +220,23 @@
   }
 
   .add-btn {
-    min-height: 28px;
-    min-width: 28px;
+    min-height: 26px;
+    min-width: 26px;
     padding: 0;
-    border: 1px solid var(--color-primary-500);
+    border: 1px solid var(--color-primary-400);
     border-radius: var(--radius-sm);
     background: var(--color-primary-500);
     color: #fff;
     cursor: pointer;
-    font-size: var(--font-base);
+    font-size: var(--font-sm);
     font-weight: 700;
     line-height: 1;
-    transition: background-color var(--transition-fast);
+    transition: background-color var(--transition-fast), transform var(--transition-fast);
     flex-shrink: 0;
   }
 
   .add-btn:hover {
     background: var(--color-primary-600);
+    transform: scale(1.08);
   }
 </style>

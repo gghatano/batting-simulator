@@ -52,10 +52,10 @@
 
   /** Estimated processing time based on quick sim timing */
   $: estimatedTimeSec = (() => {
-    const msFor100 = $quickSimMsStore;
-    if (msFor100 === null) return null;
+    const msFor10k = $quickSimMsStore;
+    if (msFor10k === null) return null;
     const totalGames = numCandidates * gamesPerCandidate;
-    return (msFor100 / 100) * totalGames / 1000;
+    return (msFor10k / 10_000) * totalGames / 1000;
   })();
 
   function formatTime(sec: number): string {
@@ -198,7 +198,7 @@
 <style>
   .search-panel {
     background: var(--color-bg-muted);
-    border: 1px solid var(--color-border);
+    border: 1px solid var(--color-border-light);
     border-radius: var(--radius-lg);
     padding: var(--space-lg);
     margin-bottom: var(--space-xl);
@@ -218,25 +218,24 @@
     display: flex;
     align-items: center;
     gap: var(--space-sm);
-    font-size: var(--font-base);
+    font-size: var(--font-sm);
+    color: var(--color-text-secondary);
   }
 
   .config-row input[type='number'],
   .config-row input[type='text'] {
-    width: 120px;
-    padding: var(--space-xs) var(--space-sm);
-    font-size: var(--font-base);
+    width: 130px;
   }
 
   .hint {
     color: var(--color-text-muted);
-    font-size: var(--font-sm);
+    font-size: var(--font-xs);
   }
 
   .time-estimate {
     margin: var(--space-sm) 0;
-    font-size: var(--font-sm);
-    color: var(--color-text-secondary);
+    font-size: var(--font-xs);
+    color: var(--color-text-muted);
   }
 
   .action-row {
@@ -253,13 +252,21 @@
     background: var(--color-primary-500);
     color: #fff;
     border: 1px solid var(--color-primary-600);
-    border-radius: var(--radius-sm);
+    border-radius: var(--radius-md);
     font-weight: 600;
-    transition: background-color var(--transition-fast);
+    box-shadow: var(--shadow-sm);
+    transition: background-color var(--transition-fast), box-shadow var(--transition-fast), transform var(--transition-fast);
   }
 
   .action-row button:hover:not(:disabled) {
     background: var(--color-primary-600);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-1px);
+  }
+
+  .action-row button:active:not(:disabled) {
+    transform: translateY(0);
+    box-shadow: var(--shadow-sm);
   }
 
   .action-row button:disabled {
@@ -299,6 +306,12 @@
     border-radius: var(--radius-md);
     padding: var(--space-sm);
     margin-bottom: var(--space-sm);
+    box-shadow: var(--shadow-card);
+    transition: box-shadow var(--transition-fast);
+  }
+
+  .candidate-card:hover {
+    box-shadow: var(--shadow-md);
   }
 
   .candidate-rank {
@@ -306,7 +319,7 @@
     align-items: center;
     font-size: var(--font-lg);
     font-weight: 700;
-    color: var(--color-primary-500);
+    color: var(--color-primary-400);
     min-width: 2rem;
     justify-content: center;
   }
