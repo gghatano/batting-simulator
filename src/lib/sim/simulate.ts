@@ -103,6 +103,10 @@ export function simulateN(
   n: number,
   seed?: number,
 ): SimResult {
+  if (n <= 0) {
+    return { mean: 0, median: 0, p10: 0, p90: 0, distribution: [] };
+  }
+
   const rng = createRng(seed);
   const scores: number[] = new Array(n);
 

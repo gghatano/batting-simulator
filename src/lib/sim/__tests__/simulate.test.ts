@@ -225,4 +225,20 @@ describe('simulateN', () => {
     expect(result.p10).toBeLessThanOrEqual(result.median);
     expect(result.median).toBeLessThanOrEqual(result.p90);
   });
+
+  it('N=0 → 例外を投げず空の結果を返す', () => {
+    const lineup = uniformLineup(allOut);
+    const result = simulateN(lineup, 0);
+    expect(result.mean).toBe(0);
+    expect(result.median).toBe(0);
+    expect(result.p10).toBe(0);
+    expect(result.p90).toBe(0);
+    expect(result.distribution).toEqual([]);
+  });
+
+  it('N=-1（負値）も同様にガードされる', () => {
+    const lineup = uniformLineup(allOut);
+    const result = simulateN(lineup, -1);
+    expect(result.distribution).toEqual([]);
+  });
 });
