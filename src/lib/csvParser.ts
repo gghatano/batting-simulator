@@ -22,11 +22,55 @@ export interface ParseCSVResult {
 }
 
 /**
+ * Split a single CSV row into fields, honoring RFC 4180 double-quote rules:
+ * a `"..."` wrapped field may contain commas, and `""` inside quotes is a
+ * literal `"`. Embedded newlines inside quoted fields are not supported (the
+ * caller splits on `\n` first).
+ */
+function splitCsvRow(line: string): string[] {
+  const fields: string[] = [];
+  let cur = '';
+  let inQuotes = false;
+  let fieldStart = true;
+
+  for (let i = 0; i < line.length; i++) {
+    const c = line[i];
+
+    if (inQuotes) {
+      if (c === '"') {
+        if (line[i + 1] === '"') {
+          cur += '"';
+          i++;
+        } else {
+          inQuotes = false;
+        }
+      } else {
+        cur += c;
+      }
+    } else if (c === '"' && fieldStart) {
+      inQuotes = true;
+      fieldStart = false;
+    } else if (c === ',') {
+      fields.push(cur);
+      cur = '';
+      fieldStart = true;
+    } else {
+      cur += c;
+      fieldStart = false;
+    }
+  }
+
+  fields.push(cur);
+  return fields;
+}
+
+/**
  * Parse CSV text into an array of Player objects.
  *
  * - Handles BOM (U+FEFF) at the start of the text
  * - Handles both \r\n and \n line endings
  * - Skips empty lines
+ * - Supports RFC 4180 double-quoted fields (commas inside quotes, `""` escape)
  * - Validates header row
  * - Validates each data row and skips invalid rows with warnings
  */
@@ -57,7 +101,7 @@ export function parseCSV(text: string): ParseCSVResult {
   }
 
   // Validate header
-  const headerCols = nonEmptyLines[0].line.split(',').map(c => c.trim().toLowerCase());
+  const headerCols = splitCsvRow(nonEmptyLines[0].line).map(c => c.trim().toLowerCase());
   const expectedStr = EXPECTED_HEADERS.join(',');
   const actualStr = headerCols.join(',');
 
@@ -71,7 +115,7 @@ export function parseCSV(text: string): ParseCSVResult {
   // Parse data rows
   for (let i = 1; i < nonEmptyLines.length; i++) {
     const { line, lineNum } = nonEmptyLines[i];
-    const cols = line.split(',');
+    const cols = splitCsvRow(line);
 
     if (cols.length !== EXPECTED_HEADERS.length) {
       warnings.push(`行${lineNum}: カラム数が不正です (${cols.length}列、期待: ${EXPECTED_HEADERS.length}列)`);
