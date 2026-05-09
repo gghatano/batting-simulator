@@ -1,8 +1,8 @@
 <script lang="ts">
   import { lineupStore } from '../stores/lineup';
-  import { simConfigStore, simResultStore } from '../stores/ui';
+  import { simResultStore } from '../stores/ui';
   import { calcBatterRates } from '../lib/rates';
-  import { simulateN } from '../lib/sim/simulate';
+  import { runSimulation } from '../lib/simRunner';
   import { summarizeDistribution } from '../lib/simStats';
   import type { Player, BatterRates } from '../lib/models';
   import SimulationSummary from './SimulationSummary.svelte';
@@ -33,19 +33,16 @@
     if (n > 100_000) n = 100_000;
   }
 
-  async function runSimulation(): Promise<void> {
+  async function handleRun(): Promise<void> {
     if (!canRun) return;
 
     running = true;
     simResultStore.set(null);
 
-    // Small delay to allow UI to update (show loading)
-    await new Promise((resolve) => setTimeout(resolve, 10));
-
     try {
       const rates: BatterRates[] = (lineup as Player[]).map(calcBatterRates);
       const seed = seedInput.trim() !== '' ? parseInt(seedInput.trim(), 10) : undefined;
-      const result = simulateN(rates, n, seed);
+      const { result } = await runSimulation(rates, n, seed);
       simResultStore.set(result);
     } catch (e) {
       console.error('Simulation error:', e);
@@ -96,7 +93,7 @@
     </div>
 
     <div class="action-row">
-      <button class="run-btn" disabled={!canRun} on:click={runSimulation}>
+      <button class="run-btn" disabled={!canRun} on:click={handleRun}>
         {#if running}
           <span class="spinner spinner-sm"></span>
           実行中...
