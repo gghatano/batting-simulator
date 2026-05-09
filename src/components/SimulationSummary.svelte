@@ -1,5 +1,7 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
   import { lineupStore } from '../stores/lineup';
+  import { playersStore } from '../stores/players';
   import { activeTab, quickSimMsStore } from '../stores/ui';
   import { calcBatterRates } from '../lib/rates';
   import { runSimulation } from '../lib/simRunner';
@@ -12,13 +14,29 @@
 
   /**
    * Create a fingerprint string for the current lineup to detect changes.
+   * Includes stats so CSV imports that update existing players invalidate the cache.
    */
   function lineupFingerprint(lineup: (Player | null)[]): string {
     if (lineup.some((s) => s === null)) return '';
     const players = lineup as Player[];
     if (players.some((p) => p.pa === 0)) return '';
-    return players.map((p) => p.id).join(',');
+    return players
+      .map((p) => `${p.id}:${p.pa}:${p.single}:${p.double}:${p.triple}:${p.hr}:${p.bb}:${p.hbp}:${p.so}`)
+      .join(',');
   }
+
+  // Invalidate cache + result when CSV import replaces the players array.
+  onMount(() => {
+    let initial = true;
+    return playersStore.subscribe(() => {
+      if (initial) {
+        initial = false;
+        return;
+      }
+      lastLineupKey = '';
+      result = null;
+    });
+  });
 
   async function runQuickSim(lineup: (Player | null)[]): Promise<void> {
     const key = lineupFingerprint(lineup);
