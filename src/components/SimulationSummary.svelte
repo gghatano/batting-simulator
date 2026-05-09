@@ -5,6 +5,7 @@
   import { activeTab, quickSimMsStore } from '../stores/ui';
   import { calcBatterRates } from '../lib/rates';
   import { runSimulation } from '../lib/simRunner';
+  import { summarizeDistribution } from '../lib/simStats';
   import type { Player, SimResult } from '../lib/models';
   import { findBracketTeams } from '../lib/npbReference';
 
@@ -73,25 +74,12 @@
   }
 
   // Computed values from result
-  $: maxScore = result
-    ? result.distribution.length - 1
-    : 0;
-  $: minScore = result
-    ? result.distribution.findIndex((c) => c > 0)
-    : 0;
-  $: totalTrials = result
-    ? result.distribution.reduce((a, b) => a + b, 0)
-    : 0;
-  $: distributionRows = result
-    ? result.distribution.map((count, score) => ({
-        score,
-        count,
-        pct: totalTrials > 0 ? (count / totalTrials) * 100 : 0,
-      }))
-    : [];
-  $: maxPct = distributionRows.length > 0
-    ? Math.max(...distributionRows.map((r) => r.pct))
-    : 0;
+  $: summary = summarizeDistribution(result);
+  $: maxScore = summary.maxScore;
+  $: minScore = summary.minScore;
+  $: totalTrials = summary.totalTrials;
+  $: distributionRows = summary.rows;
+  $: maxPct = summary.maxPct;
 
   $: bracket = result ? findBracketTeams(result.mean) : null;
 </script>
