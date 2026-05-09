@@ -3,6 +3,7 @@
   import { simConfigStore, simResultStore } from '../stores/ui';
   import { calcBatterRates } from '../lib/rates';
   import { simulateN } from '../lib/sim/simulate';
+  import { summarizeDistribution } from '../lib/simStats';
   import type { Player, BatterRates } from '../lib/models';
   import SimulationSummary from './SimulationSummary.svelte';
   import LineupSearchPanel from './LineupSearchPanel.svelte';
@@ -54,21 +55,9 @@
   }
 
   $: result = $simResultStore;
-
-  // Derive distribution rows from result
-  $: distributionRows = result
-    ? result.distribution.map((count, score) => ({
-        score,
-        count,
-        pct: result!.distribution.reduce((a, b) => a + b, 0) > 0
-          ? (count / result!.distribution.reduce((a, b) => a + b, 0)) * 100
-          : 0,
-      }))
-    : [];
-
-  $: totalTrials = result
-    ? result.distribution.reduce((a, b) => a + b, 0)
-    : 0;
+  $: summary = summarizeDistribution(result);
+  $: distributionRows = summary.rows;
+  $: totalTrials = summary.totalTrials;
 </script>
 
 <div class="simulation-panel">
