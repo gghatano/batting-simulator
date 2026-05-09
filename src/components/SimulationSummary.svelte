@@ -87,6 +87,11 @@
       <span>10,000試合を実行中...</span>
     </div>
   {:else if result}
+    {#if result.truncatedGames > 0}
+      <div class="truncation-warning" role="alert">
+        ⚠️ {totalTrials}試合中{result.truncatedGames}試合で打席上限到達（参考値）
+      </div>
+    {/if}
     <!-- Key metrics cards -->
     <div class="key-metrics">
       <div class="metric-card">
@@ -311,5 +316,17 @@
     color: var(--color-text-muted);
     font-size: var(--font-base);
     margin: 0;
+  }
+
+  .truncation-warning {
+    background: var(--color-bg-surface);
+    border: 1px solid var(--color-border-light);
+    border-left: 3px solid var(--color-danger-600);
+    border-radius: var(--radius-sm);
+    padding: var(--space-xs) var(--space-sm);
+    margin-bottom: var(--space-sm);
+    font-size: var(--font-xs);
+    color: var(--color-text-secondary);
+    line-height: 1.4;
   }
 </style>

@@ -131,6 +131,11 @@
   {#if result}
     <div class="results">
       <h3>結果サマリ</h3>
+      {#if result.truncatedGames > 0}
+        <div class="truncation-warning" role="alert">
+          ⚠️ {totalTrials}試合中{result.truncatedGames}試合で1イニングの打席数が上限(100)に達しました。極端な打線で得点が頭打ちになっている可能性があります（参考値）。
+        </div>
+      {/if}
       <div class="result-cards">
         <div class="result-card">
           <span class="result-label">平均得点</span>
@@ -279,6 +284,18 @@
     color: var(--color-danger-600);
     margin-top: var(--space-sm);
     font-size: var(--font-sm);
+  }
+
+  .truncation-warning {
+    background: var(--color-bg-muted);
+    border: 1px solid var(--color-border-light);
+    border-left: 3px solid var(--color-danger-600);
+    border-radius: var(--radius-md);
+    padding: var(--space-sm) var(--space-md);
+    margin-bottom: var(--space-md);
+    font-size: var(--font-sm);
+    color: var(--color-text-secondary);
+    line-height: 1.5;
   }
 
   .loading {

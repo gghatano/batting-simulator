@@ -95,4 +95,6 @@ export interface SimResult {
   p90: number;
   /** Score distribution: index = runs scored, value = count of trials */
   distribution: number[];
+  /** Number of games where at least one inning hit MAX_PA_PER_INNING and was force-terminated */
+  truncatedGames: number;
 }
