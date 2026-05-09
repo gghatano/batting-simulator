@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { playersStore, playersLoading, playersError, loadPlayers } from './stores/players';
-  import { activeTab } from './stores/ui';
+  import { activeTab, type ActiveTab } from './stores/ui';
   import LineupPanel from './components/LineupPanel.svelte';
   import LineupSummary from './components/LineupSummary.svelte';
   import PlayerList from './components/PlayerList.svelte';
@@ -12,8 +12,7 @@
     loadPlayers();
   });
 
-  type TabId = 'lineup' | 'simulation';
-  const tabs: { id: TabId; label: string }[] = [
+  const tabs: { id: ActiveTab; label: string }[] = [
     { id: 'lineup', label: '⚾ 打線作成' },
     { id: 'simulation', label: '📊 シミュレーション' },
   ];
