@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { onDestroy } from 'svelte';
   import { lineupStore } from '../stores/lineup';
   import { activeTab, quickSimMsStore } from '../stores/ui';
   import { calcBatterRates } from '../lib/rates';
