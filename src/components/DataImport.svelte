@@ -212,10 +212,12 @@
     display: flex;
     gap: var(--space-sm);
     align-items: center;
+    flex-wrap: wrap;
   }
 
   .url-input {
     flex: 1;
+    min-width: 280px;
     padding: var(--space-xs) var(--space-sm);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-sm);
