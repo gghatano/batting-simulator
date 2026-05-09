@@ -6,6 +6,7 @@
   import { calcBatterRates } from '../lib/rates';
   import { runSimulation } from '../lib/simRunner';
   import { summarizeDistribution } from '../lib/simStats';
+  import { projectSeason } from '../lib/seasonStats';
   import type { Player, SimResult } from '../lib/models';
   import { findBracketTeams } from '../lib/npbReference';
 
@@ -82,6 +83,15 @@
   $: maxPct = summary.maxPct;
 
   $: bracket = result ? findBracketTeams(result.mean) : null;
+
+  // Season projection (143 games) derived from lineup rates + sim mean
+  $: seasonLineup = $lineupStore.filter((s): s is Player => s !== null);
+  $: season = result && seasonLineup.length > 0
+    ? projectSeason(seasonLineup, result)
+    : null;
+  $: avgFormatted = season
+    ? season.avg.toFixed(3).replace(/^0/, '') // ".288" 表記
+    : '';
 </script>
 
 <div class="summary-panel">
@@ -143,6 +153,45 @@
       <span class="sub-metric-sep">/</span>
       <span class="sub-metric">最大: {maxScore}</span>
     </div>
+
+    <!-- Season projection (143-game team batting line) -->
+    {#if season}
+      <div class="season-section">
+        <div class="season-title">■ チーム打撃成績（{season.games}試合想定）</div>
+        <div class="table-scroll-wrapper">
+          <table class="season-table">
+            <thead>
+              <tr>
+                <th>チーム</th>
+                <th>打率</th>
+                <th>試合</th>
+                <th>打数</th>
+                <th>得点</th>
+                <th>安打</th>
+                <th>二塁打</th>
+                <th>三塁打</th>
+                <th>本塁打</th>
+                <th>打点</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="team-cell">{season.team}</td>
+                <td>{avgFormatted}</td>
+                <td>{season.games}</td>
+                <td>{season.ab}</td>
+                <td>{season.runs}</td>
+                <td>{season.hits}</td>
+                <td>{season.doubles}</td>
+                <td>{season.triples}</td>
+                <td>{season.hr}</td>
+                <td>{season.rbi}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    {/if}
 
     <!-- Score distribution bar chart (collapsed by default) -->
     <details>
@@ -334,5 +383,57 @@
     font-size: var(--font-xs);
     color: var(--color-text-secondary);
     line-height: 1.4;
+  }
+
+  /* --- Season projection --- */
+  .season-section {
+    margin-top: var(--space-md);
+    margin-bottom: var(--space-sm);
+  }
+
+  .season-title {
+    font-size: var(--font-sm);
+    color: var(--color-text-secondary);
+    margin-bottom: var(--space-xs);
+    font-weight: 600;
+  }
+
+  .table-scroll-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .season-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--font-xs);
+    background: var(--color-bg-surface);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-sm);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .season-table th,
+  .season-table td {
+    padding: var(--space-xs) var(--space-sm);
+    text-align: right;
+    border-bottom: 1px solid var(--color-border-light);
+    white-space: nowrap;
+  }
+
+  .season-table th {
+    background: var(--color-bg-muted);
+    color: var(--color-text-secondary);
+    font-weight: 600;
+  }
+
+  .season-table tbody tr:last-child td {
+    border-bottom: none;
+  }
+
+  .season-table .team-cell {
+    text-align: left;
+    color: var(--color-text);
+    font-weight: 500;
   }
 </style>
