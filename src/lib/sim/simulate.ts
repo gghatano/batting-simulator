@@ -38,16 +38,25 @@ function determineEvent(rates: BatterRates, rand: number): BatEvent {
   return 'OUT';
 }
 
+/** Result of a single simulated game */
+export interface GameResult {
+  /** Total runs scored in the game */
+  runs: number;
+  /** True if at least one inning was force-terminated by MAX_PA_PER_INNING */
+  truncated: boolean;
+}
+
 /**
  * Simulate a single 9-inning game.
  *
  * @param lineup - Array of 9 batter rate profiles
  * @param rng - Random number generator returning values in [0, 1)
- * @returns Total runs scored in the game
+ * @returns Game result with total runs and a truncation flag
  */
-export function simulateGame(lineup: BatterRates[], rng: () => number): number {
+export function simulateGame(lineup: BatterRates[], rng: () => number): GameResult {
   let totalRuns = 0;
   let batterIndex = 0; // batting order persists across innings
+  let truncated = false;
 
   for (let inning = 0; inning < 9; inning++) {
     let outs = 0;
@@ -67,9 +76,11 @@ export function simulateGame(lineup: BatterRates[], rng: () => number): number {
       batterIndex++;
       paCount++;
     }
+
+    if (outs < 3) truncated = true;
   }
 
-  return totalRuns;
+  return { runs: totalRuns, truncated };
 }
 
 /**
@@ -103,11 +114,18 @@ export function simulateN(
   n: number,
   seed?: number,
 ): SimResult {
+  if (n <= 0) {
+    return { mean: 0, median: 0, p10: 0, p90: 0, distribution: [], truncatedGames: 0 };
+  }
+
   const rng = createRng(seed);
   const scores: number[] = new Array(n);
+  let truncatedGames = 0;
 
   for (let i = 0; i < n; i++) {
-    scores[i] = simulateGame(lineup, rng);
+    const game = simulateGame(lineup, rng);
+    scores[i] = game.runs;
+    if (game.truncated) truncatedGames++;
   }
 
   // Sort for percentile calculations
@@ -132,5 +150,5 @@ export function simulateN(
     distribution[scores[i]]++;
   }
 
-  return { mean, median, p10, p90, distribution };
+  return { mean, median, p10, p90, distribution, truncatedGames };
 }

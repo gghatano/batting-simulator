@@ -156,6 +156,37 @@ describe('parseCSV', () => {
     expect(warnings[0]).toContain('数値フィールドが不正');
   });
 
+  it('handles double-quoted field with embedded comma', () => {
+    const csv = makeCSV([
+      '1,"佐藤, 太郎",巨人,投,500,100,30,5,20,40,5,80',
+    ]);
+    const { players, warnings } = parseCSV(csv);
+
+    expect(warnings).toHaveLength(0);
+    expect(players).toHaveLength(1);
+    expect(players[0].name).toBe('佐藤, 太郎');
+  });
+
+  it('handles escaped double-quote inside quoted field ("" → ")', () => {
+    const csv = makeCSV([
+      '1,"He said ""hi""",巨人,投,500,100,30,5,20,40,5,80',
+    ]);
+    const { players, warnings } = parseCSV(csv);
+
+    expect(warnings).toHaveLength(0);
+    expect(players).toHaveLength(1);
+    expect(players[0].name).toBe('He said "hi"');
+  });
+
+  it('handles quoted header columns', () => {
+    const csv = '"id","name","team","position","pa","single","double","triple","hr","bb","hbp","so"\n1,田中,巨人,投,500,100,30,5,20,40,5,80';
+    const { players, warnings } = parseCSV(csv);
+
+    expect(warnings).toHaveLength(0);
+    expect(players).toHaveLength(1);
+    expect(players[0].name).toBe('田中');
+  });
+
   it('accepts all valid positions', () => {
     const positions = ['投', '捕', '一', '二', '三', '遊', '左', '中', '右', '指'];
     const rows = positions.map((pos, i) =>

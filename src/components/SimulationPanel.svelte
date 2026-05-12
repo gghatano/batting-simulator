@@ -1,8 +1,9 @@
 <script lang="ts">
   import { lineupStore } from '../stores/lineup';
-  import { simConfigStore, simResultStore } from '../stores/ui';
+  import { simResultStore } from '../stores/ui';
   import { calcBatterRates } from '../lib/rates';
-  import { simulateN } from '../lib/sim/simulate';
+  import { runSimulation } from '../lib/simRunner';
+  import { summarizeDistribution } from '../lib/simStats';
   import type { Player, BatterRates } from '../lib/models';
   import SimulationSummary from './SimulationSummary.svelte';
   import LineupSearchPanel from './LineupSearchPanel.svelte';
@@ -32,19 +33,16 @@
     if (n > 100_000) n = 100_000;
   }
 
-  async function runSimulation(): Promise<void> {
+  async function handleRun(): Promise<void> {
     if (!canRun) return;
 
     running = true;
     simResultStore.set(null);
 
-    // Small delay to allow UI to update (show loading)
-    await new Promise((resolve) => setTimeout(resolve, 10));
-
     try {
       const rates: BatterRates[] = (lineup as Player[]).map(calcBatterRates);
       const seed = seedInput.trim() !== '' ? parseInt(seedInput.trim(), 10) : undefined;
-      const result = simulateN(rates, n, seed);
+      const { result } = await runSimulation(rates, n, seed);
       simResultStore.set(result);
     } catch (e) {
       console.error('Simulation error:', e);
@@ -54,21 +52,9 @@
   }
 
   $: result = $simResultStore;
-
-  // Derive distribution rows from result
-  $: distributionRows = result
-    ? result.distribution.map((count, score) => ({
-        score,
-        count,
-        pct: result!.distribution.reduce((a, b) => a + b, 0) > 0
-          ? (count / result!.distribution.reduce((a, b) => a + b, 0)) * 100
-          : 0,
-      }))
-    : [];
-
-  $: totalTrials = result
-    ? result.distribution.reduce((a, b) => a + b, 0)
-    : 0;
+  $: summary = summarizeDistribution(result);
+  $: distributionRows = summary.rows;
+  $: totalTrials = summary.totalTrials;
 </script>
 
 <div class="simulation-panel">
@@ -107,7 +93,7 @@
     </div>
 
     <div class="action-row">
-      <button class="run-btn" disabled={!canRun} on:click={runSimulation}>
+      <button class="run-btn" disabled={!canRun} on:click={handleRun}>
         {#if running}
           <span class="spinner spinner-sm"></span>
           実行中...
@@ -131,6 +117,11 @@
   {#if result}
     <div class="results">
       <h3>結果サマリ</h3>
+      {#if result.truncatedGames > 0}
+        <div class="truncation-warning" role="alert">
+          ⚠️ {totalTrials}試合中{result.truncatedGames}試合で1イニングの打席数が上限(100)に達しました。極端な打線で得点が頭打ちになっている可能性があります（参考値）。
+        </div>
+      {/if}
       <div class="result-cards">
         <div class="result-card">
           <span class="result-label">平均得点</span>
@@ -279,6 +270,18 @@
     color: var(--color-danger-600);
     margin-top: var(--space-sm);
     font-size: var(--font-sm);
+  }
+
+  .truncation-warning {
+    background: var(--color-bg-muted);
+    border: 1px solid var(--color-border-light);
+    border-left: 3px solid var(--color-danger-600);
+    border-radius: var(--radius-md);
+    padding: var(--space-sm) var(--space-md);
+    margin-bottom: var(--space-md);
+    font-size: var(--font-sm);
+    color: var(--color-text-secondary);
+    line-height: 1.5;
   }
 
   .loading {

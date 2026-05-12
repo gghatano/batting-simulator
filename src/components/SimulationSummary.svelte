@@ -1,9 +1,12 @@
 <script lang="ts">
-  import { onDestroy } from 'svelte';
+  import { onMount } from 'svelte';
   import { lineupStore } from '../stores/lineup';
+  import { playersStore } from '../stores/players';
   import { activeTab, quickSimMsStore } from '../stores/ui';
   import { calcBatterRates } from '../lib/rates';
   import { runSimulation } from '../lib/simRunner';
+  import { summarizeDistribution } from '../lib/simStats';
+  import { projectSeason } from '../lib/seasonStats';
   import type { Player, SimResult } from '../lib/models';
   import { findBracketTeams } from '../lib/npbReference';
 
@@ -13,13 +16,29 @@
 
   /**
    * Create a fingerprint string for the current lineup to detect changes.
+   * Includes stats so CSV imports that update existing players invalidate the cache.
    */
   function lineupFingerprint(lineup: (Player | null)[]): string {
     if (lineup.some((s) => s === null)) return '';
     const players = lineup as Player[];
     if (players.some((p) => p.pa === 0)) return '';
-    return players.map((p) => p.id).join(',');
+    return players
+      .map((p) => `${p.id}:${p.pa}:${p.single}:${p.double}:${p.triple}:${p.hr}:${p.bb}:${p.hbp}:${p.so}`)
+      .join(',');
   }
+
+  // Invalidate cache + result when CSV import replaces the players array.
+  onMount(() => {
+    let initial = true;
+    return playersStore.subscribe(() => {
+      if (initial) {
+        initial = false;
+        return;
+      }
+      lastLineupKey = '';
+      result = null;
+    });
+  });
 
   async function runQuickSim(lineup: (Player | null)[]): Promise<void> {
     const key = lineupFingerprint(lineup);
@@ -56,27 +75,23 @@
   }
 
   // Computed values from result
-  $: maxScore = result
-    ? result.distribution.length - 1
-    : 0;
-  $: minScore = result
-    ? result.distribution.findIndex((c) => c > 0)
-    : 0;
-  $: totalTrials = result
-    ? result.distribution.reduce((a, b) => a + b, 0)
-    : 0;
-  $: distributionRows = result
-    ? result.distribution.map((count, score) => ({
-        score,
-        count,
-        pct: totalTrials > 0 ? (count / totalTrials) * 100 : 0,
-      }))
-    : [];
-  $: maxPct = distributionRows.length > 0
-    ? Math.max(...distributionRows.map((r) => r.pct))
-    : 0;
+  $: summary = summarizeDistribution(result);
+  $: maxScore = summary.maxScore;
+  $: minScore = summary.minScore;
+  $: totalTrials = summary.totalTrials;
+  $: distributionRows = summary.rows;
+  $: maxPct = summary.maxPct;
 
   $: bracket = result ? findBracketTeams(result.mean) : null;
+
+  // Season projection (143 games) derived from lineup rates + sim mean
+  $: seasonLineup = $lineupStore.filter((s): s is Player => s !== null);
+  $: season = result && seasonLineup.length > 0
+    ? projectSeason(seasonLineup, result)
+    : null;
+  $: avgFormatted = season
+    ? season.avg.toFixed(3).replace(/^0/, '') // ".288" 表記
+    : '';
 </script>
 
 <div class="summary-panel">
@@ -88,6 +103,11 @@
       <span>10,000試合を実行中...</span>
     </div>
   {:else if result}
+    {#if result.truncatedGames > 0}
+      <div class="truncation-warning" role="alert">
+        ⚠️ {totalTrials}試合中{result.truncatedGames}試合で打席上限到達（参考値）
+      </div>
+    {/if}
     <!-- Key metrics cards -->
     <div class="key-metrics">
       <div class="metric-card">
@@ -133,6 +153,45 @@
       <span class="sub-metric-sep">/</span>
       <span class="sub-metric">最大: {maxScore}</span>
     </div>
+
+    <!-- Season projection (143-game team batting line) -->
+    {#if season}
+      <div class="season-section">
+        <div class="season-title">■ チーム打撃成績（{season.games}試合想定）</div>
+        <div class="table-scroll-wrapper">
+          <table class="season-table">
+            <thead>
+              <tr>
+                <th>チーム</th>
+                <th>打率</th>
+                <th>試合</th>
+                <th>打数</th>
+                <th>得点</th>
+                <th>安打</th>
+                <th>二塁打</th>
+                <th>三塁打</th>
+                <th>本塁打</th>
+                <th>打点</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="team-cell">{season.team}</td>
+                <td>{avgFormatted}</td>
+                <td>{season.games}</td>
+                <td>{season.ab}</td>
+                <td>{season.runs}</td>
+                <td>{season.hits}</td>
+                <td>{season.doubles}</td>
+                <td>{season.triples}</td>
+                <td>{season.hr}</td>
+                <td>{season.rbi}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    {/if}
 
     <!-- Score distribution bar chart (collapsed by default) -->
     <details>
@@ -312,5 +371,69 @@
     color: var(--color-text-muted);
     font-size: var(--font-base);
     margin: 0;
+  }
+
+  .truncation-warning {
+    background: var(--color-bg-surface);
+    border: 1px solid var(--color-border-light);
+    border-left: 3px solid var(--color-danger-600);
+    border-radius: var(--radius-sm);
+    padding: var(--space-xs) var(--space-sm);
+    margin-bottom: var(--space-sm);
+    font-size: var(--font-xs);
+    color: var(--color-text-secondary);
+    line-height: 1.4;
+  }
+
+  /* --- Season projection --- */
+  .season-section {
+    margin-top: var(--space-md);
+    margin-bottom: var(--space-sm);
+  }
+
+  .season-title {
+    font-size: var(--font-sm);
+    color: var(--color-text-secondary);
+    margin-bottom: var(--space-xs);
+    font-weight: 600;
+  }
+
+  .table-scroll-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .season-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: var(--font-xs);
+    background: var(--color-bg-surface);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-sm);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .season-table th,
+  .season-table td {
+    padding: var(--space-xs) var(--space-sm);
+    text-align: right;
+    border-bottom: 1px solid var(--color-border-light);
+    white-space: nowrap;
+  }
+
+  .season-table th {
+    background: var(--color-bg-muted);
+    color: var(--color-text-secondary);
+    font-weight: 600;
+  }
+
+  .season-table tbody tr:last-child td {
+    border-bottom: none;
+  }
+
+  .season-table .team-cell {
+    text-align: left;
+    color: var(--color-text);
+    font-weight: 500;
   }
 </style>

@@ -42,18 +42,20 @@ describe('simulateGame', () => {
   it('全打者 pOUT=1.0 → 0得点', () => {
     const lineup = uniformLineup(allOut);
     const rng = createRng(42);
-    const runs = simulateGame(lineup, rng);
-    expect(runs).toBe(0);
+    const game = simulateGame(lineup, rng);
+    expect(game.runs).toBe(0);
+    expect(game.truncated).toBe(false);
   });
 
-  it('全打者 pHR=1.0 → 全打席HRで大量得点（9回 × 100PA上限 = 900得点）', () => {
+  it('全打者 pHR=1.0 → 全打席HRで大量得点（9回 × 100PA上限 = 900得点、truncated=true）', () => {
     const lineup = uniformLineup(allHR);
     const rng = createRng(42);
-    const runs = simulateGame(lineup, rng);
+    const game = simulateGame(lineup, rng);
     // With pHR=1.0, no outs ever occur. Each inning hits MAX_PA_PER_INNING (100).
     // Each HR with empty bases = 1 run (solo HR). All HRs clear bases.
     // 9 innings × 100 solo HRs = 900 runs.
-    expect(runs).toBe(900);
+    expect(game.runs).toBe(900);
+    expect(game.truncated).toBe(true);
   });
 
   it('打順は回をまたいで引き継がれる', () => {
@@ -72,7 +74,7 @@ describe('simulateGame', () => {
     });
 
     const rng = createRng(99);
-    const runs = simulateGame(lineup, rng);
+    const game = simulateGame(lineup, rng);
 
     // Inning pattern analysis:
     // Inning 1: batter 1 (HR, 1 run), batter 2 (out), batter 3 (out), batter 4 (out) → 1 run, 3 outs
@@ -92,7 +94,8 @@ describe('simulateGame', () => {
     // Inning 9: B1=HR(0 outs), B2=OUT(1), B3=OUT(2), B4=OUT(3) → 1 run
     //
     // Total: 1 + 0 + 1 + 0 + 0 + 1 + 0 + 0 + 1 = 4 runs
-    expect(runs).toBe(4);
+    expect(game.runs).toBe(4);
+    expect(game.truncated).toBe(false);
   });
 
   it('seed固定で2回実行 → 同じ結果', () => {
@@ -106,9 +109,9 @@ describe('simulateGame', () => {
       out: 0.43,
     });
 
-    const runs1 = simulateGame(lineup, createRng(12345));
-    const runs2 = simulateGame(lineup, createRng(12345));
-    expect(runs1).toBe(runs2);
+    const g1 = simulateGame(lineup, createRng(12345));
+    const g2 = simulateGame(lineup, createRng(12345));
+    expect(g1).toEqual(g2);
   });
 });
 
@@ -117,7 +120,7 @@ describe('simulateGame', () => {
 // ---------------------------------------------------------------------------
 
 describe('simulateN', () => {
-  it('全打者 pOUT=1.0 → 全試行0得点、mean=0, median=0', () => {
+  it('全打者 pOUT=1.0 → 全試行0得点、mean=0, median=0、truncatedGames=0', () => {
     const lineup = uniformLineup(allOut);
     const result = simulateN(lineup, 100, 42);
 
@@ -126,9 +129,10 @@ describe('simulateN', () => {
     expect(result.p10).toBe(0);
     expect(result.p90).toBe(0);
     expect(result.distribution).toEqual([100]); // 100 games, all 0 runs
+    expect(result.truncatedGames).toBe(0);
   });
 
-  it('全打者 pHR=1.0 → 確定的に900得点', () => {
+  it('全打者 pHR=1.0 → 確定的に900得点、全試合 truncated', () => {
     const lineup = uniformLineup(allHR);
     const result = simulateN(lineup, 10, 42);
 
@@ -138,6 +142,7 @@ describe('simulateN', () => {
     expect(result.p90).toBe(900);
     // distribution[900] should be 10
     expect(result.distribution[900]).toBe(10);
+    expect(result.truncatedGames).toBe(10);
   });
 
   it('seed固定で2回実行 → 結果が完全一致', () => {
@@ -224,5 +229,22 @@ describe('simulateN', () => {
     expect(result.median).toBeGreaterThanOrEqual(0);
     expect(result.p10).toBeLessThanOrEqual(result.median);
     expect(result.median).toBeLessThanOrEqual(result.p90);
+  });
+
+  it('N=0 → 例外を投げず空の結果を返す', () => {
+    const lineup = uniformLineup(allOut);
+    const result = simulateN(lineup, 0);
+    expect(result.mean).toBe(0);
+    expect(result.median).toBe(0);
+    expect(result.p10).toBe(0);
+    expect(result.p90).toBe(0);
+    expect(result.distribution).toEqual([]);
+    expect(result.truncatedGames).toBe(0);
+  });
+
+  it('N=-1（負値）も同様にガードされる', () => {
+    const lineup = uniformLineup(allOut);
+    const result = simulateN(lineup, -1);
+    expect(result.distribution).toEqual([]);
   });
 });
